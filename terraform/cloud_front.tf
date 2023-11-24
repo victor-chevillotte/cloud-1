@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "wordpress" {
   origin {
-    domain_name = aws_lb.alb_wordpress.dns_name
+    domain_name = "cloud.mdesoeuv.com"
     origin_id   = aws_lb.alb_wordpress.id
     custom_origin_config {
       http_port              = 80
@@ -45,7 +45,13 @@ resource "aws_cloudfront_distribution" "wordpress" {
   }
 }
 
+provider "aws" {
+  alias = "virginia"
+  region = "us-east-1"
+}
+
 resource "aws_acm_certificate" "cert" {
+  provider = aws.virginia
   private_key = file("${path.module}/ssl/mdesoeuv.com_private_key.key")
   certificate_body = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate.cer")
   certificate_chain = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE.cer")
