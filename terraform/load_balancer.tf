@@ -9,7 +9,6 @@ data "aws_subnets" "default" {
   }
 }
 
-
 resource "aws_lb_target_group" "tg_wordpress" {
   name     = "${var.prefix}-${var.target_group_name}"
   port     = 80
@@ -69,9 +68,6 @@ resource "aws_lb" "alb_wordpress" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
   subnets            = data.aws_subnets.default.ids
-
-  enable_deletion_protection = true
-
 }
 
 resource "aws_lb_target_group_attachment" "wordpress_attachment" {
@@ -82,13 +78,16 @@ resource "aws_lb_target_group_attachment" "wordpress_attachment" {
   port             = 80
 }
 
-resource "aws_lb_listener" "wordpress_listener" {
+resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.cert.arn
 
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tg_wordpress.arn
   }
 }
+
