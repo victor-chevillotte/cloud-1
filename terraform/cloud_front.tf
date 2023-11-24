@@ -9,11 +9,22 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
 
   default_cache_behavior {
-	cached_methods 
-	viewer_protocol_policy = "allow-all"
-    cache_policy_id  = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
-    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = local.s3_origin_id
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = aws_lb.alb_wordpress.id
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "allow-all"
+    min_ttl                = 0
+    default_ttl            = 3600
+    max_ttl                = 86400
   }
 
   restrictions {
