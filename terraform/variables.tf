@@ -1,39 +1,60 @@
 variable "aws_region" {
   default = "eu-west-1"
-type    = string
+  type    = string
 }
 
 variable "instance_type" {
   default = "t2.micro"
-  type = string
+  type    = string
 }
 
 variable "prefix" {
   default = "c1"
-  type = string
+  type    = string
 }
 
 variable "target_group_name" {
   default = "wordpress"
-  type = string
+  type    = string
 }
 
 variable "target_group_port" {
   default = 8080
-  type = number
+  type    = number
 }
 
 variable "target_group_protocol" {
   default = "TCP"
-  type = string
+  type    = string
 }
 
 variable "alb_sg_name" {
   default = "wordpress_alb"
-  type = string
+  type    = string
 }
 
 variable "alb_name" {
   default = "wordpress"
-  type = string
+  type    = string
+}
+
+variable "instance_count" {
+  default = 3
+  type    = number
+}
+
+variable "db_name" {
+  default = "wordpress"
+  type    = string
+}
+
+variable "db_username" {
+  default = "wordpress"
+  type    = string
+}
+
+
+variable "db_password" {
+  default = "wordpress"
+  type    = string
 }

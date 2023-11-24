@@ -1,6 +1,6 @@
 data "aws_vpc" "default" {
   default = true
-} 
+}
 
 data "aws_subnets" "default" {
   filter {
@@ -11,14 +11,14 @@ data "aws_subnets" "default" {
 
 
 resource "aws_lb_target_group" "tg_wordpress" {
-  name        = "${var.prefix}-${var.target_group_name}" 
-  port        = 80
-  protocol    = "HTTP"
-  vpc_id      = data.aws_vpc.default.id
+  name     = "${var.prefix}-${var.target_group_name}"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = data.aws_vpc.default.id
 }
 
 resource "aws_security_group" "alb_sg" {
-  name        = "${var.prefix}-${var.alb_sg_name}" 
+  name = "${var.prefix}-${var.alb_sg_name}"
 
   ingress {
     from_port        = 22
@@ -64,7 +64,7 @@ resource "aws_security_group" "alb_sg" {
 
 
 resource "aws_lb" "alb_wordpress" {
-  name               = "${var.prefix}-${var.alb_name}" 
+  name               = "${var.prefix}-${var.alb_name}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
@@ -75,8 +75,10 @@ resource "aws_lb" "alb_wordpress" {
 }
 
 resource "aws_lb_target_group_attachment" "wordpress_attachment" {
+  depends_on       = [aws_instance.wordpress]
+  count            = length(aws_instance.wordpress)
   target_group_arn = aws_lb_target_group.tg_wordpress.arn
-  target_id        = aws_instance.dev.id
+  target_id        = aws_instance.wordpress[count.index].id
   port             = 80
 }
 
