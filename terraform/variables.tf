@@ -14,7 +14,7 @@ variable "target_group_name" {
 }
 
 variable "target_group_port" {
-  default = 80
+  default = 8080
   type = number
 }
 
