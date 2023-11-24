@@ -1,4 +1,49 @@
+locals {
+  plugins-config = <<-END
+    #cloud-config
+    ${jsonencode({
+  write_files = [
+    {
+      path        = "/etc/systemd/system/wordpress.service"
+      permissions = "0644"
+      owner       = "ec2-user:ec2-user"
+      encoding    = "b64"
+      content = base64encode("${path.module}/config/wordpress.service")
+    },
+    {
+      path        = "/home/ec2-user/docker-compose.yaml"
+      permissions = "0644"
+      owner       = "ec2-user:ec2-user"
+      encoding    = "b64"
+      content = base64encode("${path.module}/../app/docker-compose.yaml")
+    },
+    {
+      path        = "/home/ec2-user/.env"
+      permissions = "0644"
+      owner       = "ec2-user:ec2-user"
+      encoding    = "b64"
+      content = base64encode("${path.module}/../app/.env")
+    }
+  ]
+})}
+  END
+}
 
+data "cloudinit_config" "config" {
+  gzip          = false
+  base64_encode = false
+
+  part {
+    content_type = "text/cloud-config"
+    filename     = "cloud-config.yaml"
+    content      = local.plugins-config
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content = file("${path.module}/config/userdata.sh")
+  }
+}
 
 data "aws_ami" "linux" {
   most_recent = true
@@ -12,10 +57,10 @@ data "aws_ami" "linux" {
 
 resource "aws_instance" "dev" {
   ami                         = data.aws_ami.linux.id
-  instance_type               = "t2.medium"
+  instance_type               = var.instance_type
   associate_public_ip_address = true
   key_name                    = aws_key_pair.ec2-key-pair.key_name
-  user_data_base64            = filebase64("${path.module}/config/userdata.sh")
+  user_data                   = data.cloudinit_config.config.rendered
   user_data_replace_on_change = true
   security_groups             = [aws_security_group.dev-ec2.name]
   tags = {
@@ -24,7 +69,7 @@ resource "aws_instance" "dev" {
 }
 
 resource "aws_key_pair" "ec2-key-pair" {
-  key_name   = "ec2-key-pair"
+  key_name   = "ec2-wordpress-key-pair"
   public_key = tls_private_key.rsa.public_key_openssh
 }
 
@@ -35,12 +80,12 @@ resource "tls_private_key" "rsa" {
 
 resource "local_file" "ec2-key" {
   content  = tls_private_key.rsa.private_key_pem
-  filename = "ec2-key-pair"
+  filename = "ec2-wordpress-key-pair"
 }
 
 resource "aws_security_group" "dev-ec2" {
-  name        = "dev-ec2-sg"
-  description = "rules for dev-ec2"
+  name        = "wordpress-ec2-sg"
+  description = "rules for wordpress-ec2"
 
   ingress {
     from_port        = 22
