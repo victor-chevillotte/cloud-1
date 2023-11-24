@@ -11,19 +11,19 @@ data "cloudinit_config" "config" {
         {
           path        = "/etc/systemd/system/wordpress.service"
           permissions = "0644"
-          owner       = "ec2-user:ec2-user"
+          owner       = "root:root"
           content     = file("${path.module}/config/wordpress.service")
         },
         {
-          path        = "/home/ec2-user/docker-compose.yaml"
+          path        = "/tmp/docker-compose.yaml"
           permissions = "0644"
-          owner       = "ec2-user:ec2-user"
+          owner       = "root:root"
           content     = file("${path.module}/../app/docker-compose.yaml")
         },
         {
-          path        = "/home/ec2-user/.env"
+          path        = "/tmp/.env"
           permissions = "0644"
-          owner       = "ec2-user:ec2-user"
+          owner       = "root:root"
           content     = file("${path.module}/../app/.env")
         }
       ]

@@ -6,8 +6,8 @@ After=docker.service network-online.target
 Type=simple
 Restart=always
 RestartSec=1
-User=admin
-ExecStart=/usr/local/bin/docker-compose up -f /home/ec2-user/docker-compose.yaml -d 
+User=root
+ExecStart=/usr/local/bin/docker-compose -f /home/ec2-user/docker-compose.yaml up 
 
 [Install]
 WantedBy=multi-user.target
