@@ -1,9 +1,21 @@
+data "aws_vpc" "default" {
+  default = true
+} 
+
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.default.id]
+  }
+}
+
+
 resource "aws_lb_target_group" "tg_wordpress" {
   name        = "${var.prefix}-${var.target_group_name}" 
   target_type = "alb"
   port        = var.target_group_port
   protocol    = var.target_group_protocol 
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = data.aws_vpc.default.id
 }
 
 resource "aws_security_group" "alb_sg" {
@@ -57,7 +69,7 @@ resource "aws_lb" "alb_wordpress" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [for subnet in aws_subnet.public : subnet.id]
+  subnets            = data.aws_subnets.default.ids
 
   enable_deletion_protection = true
 

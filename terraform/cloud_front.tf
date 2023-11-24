@@ -2,7 +2,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
-
   }
 
   enabled             = true
