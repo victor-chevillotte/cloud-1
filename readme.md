@@ -1,0 +1,4 @@
+- ec2
+- target group
+- load balancer
+- cloudfront
