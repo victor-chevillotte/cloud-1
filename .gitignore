@@ -96,3 +96,4 @@ terraform.rc
 
 terraform/.envrc
 terraform/.terraform.lock.hcl
+terraform/ec2-key-pair
