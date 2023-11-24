@@ -1,47 +1,38 @@
-locals {
-  plugins-config = <<-END
-    #cloud-config
-    ${jsonencode({
-  write_files = [
-    {
-      path        = "/etc/systemd/system/wordpress.service"
-      permissions = "0644"
-      owner       = "ec2-user:ec2-user"
-      encoding    = "b64"
-      content = base64encode("${path.module}/config/wordpress.service")
-    },
-    {
-      path        = "/home/ec2-user/docker-compose.yaml"
-      permissions = "0644"
-      owner       = "ec2-user:ec2-user"
-      encoding    = "b64"
-      content = base64encode("${path.module}/../app/docker-compose.yaml")
-    },
-    {
-      path        = "/home/ec2-user/.env"
-      permissions = "0644"
-      owner       = "ec2-user:ec2-user"
-      encoding    = "b64"
-      content = base64encode("${path.module}/../app/.env")
-    }
-  ]
-})}
-  END
-}
+
 
 data "cloudinit_config" "config" {
-  gzip          = false
-  base64_encode = false
+  gzip          = true
+  base64_encode = true
 
   part {
     content_type = "text/cloud-config"
-    filename     = "cloud-config.yaml"
-    content      = local.plugins-config
+    content = yamlencode({
+      write_files = [
+        {
+          path        = "/etc/systemd/system/wordpress.service"
+          permissions = "0644"
+          owner       = "ec2-user:ec2-user"
+          content     = file("${path.module}/config/wordpress.service")
+        },
+        {
+          path        = "/home/ec2-user/docker-compose.yaml"
+          permissions = "0644"
+          owner       = "ec2-user:ec2-user"
+          content     = file("${path.module}/../app/docker-compose.yaml")
+        },
+        {
+          path        = "/home/ec2-user/.env"
+          permissions = "0644"
+          owner       = "ec2-user:ec2-user"
+          content     = file("${path.module}/../app/.env")
+        }
+      ]
+    })
   }
 
   part {
     content_type = "text/x-shellscript"
-    content = file("${path.module}/config/userdata.sh")
+    content      = file("${path.module}/config/userdata.sh")
   }
 }
 
@@ -60,7 +51,7 @@ resource "aws_instance" "dev" {
   instance_type               = var.instance_type
   associate_public_ip_address = true
   key_name                    = aws_key_pair.ec2-key-pair.key_name
-  user_data                   = data.cloudinit_config.config.rendered
+  user_data_base64  = data.cloudinit_config.config.rendered
   user_data_replace_on_change = true
   security_groups             = [aws_security_group.dev-ec2.name]
   tags = {
