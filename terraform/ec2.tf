@@ -46,16 +46,17 @@ data "aws_ami" "linux" {
   }
 }
 
-resource "aws_instance" "dev" {
+resource "aws_instance" "wordpress" {
+  count                       = var.instance_count
   ami                         = data.aws_ami.linux.id
   instance_type               = var.instance_type
   associate_public_ip_address = true
   key_name                    = aws_key_pair.ec2-key-pair.key_name
-  user_data_base64  = data.cloudinit_config.config.rendered
+  user_data_base64            = data.cloudinit_config.config.rendered
   user_data_replace_on_change = true
   security_groups             = [aws_security_group.dev-ec2.name]
   tags = {
-    Name = "Dev Instance"
+    Name = "wordpress Instance"
   }
 }
 
