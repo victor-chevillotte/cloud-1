@@ -7,7 +7,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=admin
-ExecStart=/usr/bin/docker-compose up -f /app/docker-compose.yaml -d 
+ExecStart=/usr/local/bin/docker-compose up -f /app/docker-compose.yaml -d 
 
 [Install]
 WantedBy=multi-user.target
