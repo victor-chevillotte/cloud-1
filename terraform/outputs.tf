@@ -1,4 +1,4 @@
-output "instance_ip" {
+output "instances_ip" {
   value = aws_instance.wordpress[*].public_ip
 }
 
