@@ -8,6 +8,9 @@ sudo usermod -a -G docker ec2-user
 newgrp docker
 sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-sudo systemctl start wordpress-app.service
-sudo systemctl enable wordpress-app.service
-mkdir -p /app
+mv /tmp/.env /home/ec2-user/.env
+mv /tmp/docker-compose.yaml /home/ec2-user/docker-compose.yaml
+sudo chown ec2-user:ec2-user /home/ec2-user/.env
+sudo chown ec2-user:ec2-user /home/ec2-user/docker-compose.yaml
+sudo systemctl start wordpress.service
+sudo systemctl enable wordpress.service

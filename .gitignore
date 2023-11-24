@@ -96,4 +96,7 @@ terraform.rc
 
 terraform/.envrc
 terraform/.terraform.lock.hcl
+app/.env
+terraform/ec2-wordpress-key-pair
 terraform/ec2-key-pair
+
