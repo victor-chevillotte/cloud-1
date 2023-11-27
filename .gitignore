@@ -101,3 +101,4 @@ terraform/ec2-wordpress-key-pair
 terraform/ec2-key-pair
 
 terraform/mdesoeuv.com_private_key.key
+terraform/ssl
