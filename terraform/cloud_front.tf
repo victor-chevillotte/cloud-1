@@ -1,14 +1,15 @@
 resource "aws_cloudfront_distribution" "wordpress" {
   origin {
-    domain_name = "cloud.mdesoeuv.com"
+    domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
     custom_origin_config {
       http_port              = 80
       https_port             = 443
       origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+      origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
+  aliases = ["cloud.mdesoeuv.com"]
 
   enabled         = true
   is_ipv6_enabled = true
@@ -41,7 +42,6 @@ resource "aws_cloudfront_distribution" "wordpress" {
   viewer_certificate {
     acm_certificate_arn      = aws_acm_certificate.cert.arn
     ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.2_2018"
   }
 }
 
@@ -55,4 +55,8 @@ resource "aws_acm_certificate" "cert" {
   private_key = file("${path.module}/ssl/mdesoeuv.com_private_key.key")
   certificate_body = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate.cer")
   certificate_chain = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE.cer")
+  
+  lifecycle {
+    create_before_destroy = true
+  }
   }
