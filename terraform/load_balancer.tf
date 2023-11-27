@@ -14,6 +14,11 @@ resource "aws_lb_target_group" "tg_wordpress" {
   port     = 80 #port of wordpress
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
+
+   stickiness {
+    enabled = false
+    type    = "lb_cookie"
+  }
 }
 
 resource "aws_security_group" "alb_sg" {
@@ -110,7 +115,7 @@ resource "aws_lb_listener" "https_listener" {
       }
 
       stickiness {
-        enabled  = true
+        enabled  = false
         duration = 86400
       }
     }
