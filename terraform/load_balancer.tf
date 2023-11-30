@@ -99,11 +99,7 @@ resource "aws_lb_listener" "main" {
 }
 
 
-resource "aws_lb_listener_certificate" "example" {
-  provider = aws.virginia
-  listener_arn    = aws_lb_listener.https_listener.arn
-  certificate_arn = aws_acm_certificate.cert.arn
-}
+
 
 
 resource "aws_lb_listener" "https_listener" {

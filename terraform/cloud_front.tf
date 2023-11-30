@@ -9,7 +9,6 @@ resource "aws_cloudfront_distribution" "wordpress" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
-  aliases = ["cloud.mdesoeuv.com"]
 
   enabled         = true
   is_ipv6_enabled = true
@@ -40,18 +39,8 @@ resource "aws_cloudfront_distribution" "wordpress" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate.cert.arn
+    cloudfront_default_certificate = true
     ssl_support_method       = "sni-only"
   }
 }
-
-resource "aws_acm_certificate" "cert" {
-  provider = aws.virginia
-  private_key = file("${path.module}/ssl/mdesoeuv.com_private_key_1.key")
-  certificate_body = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_2.cer")
-  
-  lifecycle {
-    create_before_destroy = true
-  }
-  }
 
