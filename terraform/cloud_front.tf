@@ -2,6 +2,7 @@ resource "aws_cloudfront_distribution" "wordpress" {
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
+
     custom_origin_config {
       http_port              = 80
       https_port             = 443
@@ -39,19 +40,24 @@ resource "aws_cloudfront_distribution" "wordpress" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
-    ssl_support_method       = "sni-only"
+    iam_certificate_id      = aws_iam_server_certificate.test_cert.id
+    ssl_support_method      = "sni-only"
     minimum_protocol_version = "TLSv1.2_2018"
   }
-
 }
 
-resource "aws_acm_certificate" "wordpress" {
-  domain_name       = "*.cloudfront.net"
-  validation_method = "DNS"
+provider "aws" {
+  alias = "us-east-1"
+  region = "us-east-1"
+}
 
+resource "aws_iam_server_certificate" "test_cert" {
+  provider = aws.us-east-1
+  name             = "${var.prefix}-test-cert"
+  certificate_body = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_2.cer")
+  certificate_chain = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE_2.cer")
+  private_key      = file("${path.module}/ssl/mdesoeuv.com_private_key_1.key")
   lifecycle {
     create_before_destroy = true
   }
-  
 }

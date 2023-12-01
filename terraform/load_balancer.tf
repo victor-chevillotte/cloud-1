@@ -131,7 +131,7 @@ resource "aws_lb_listener" "https" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = aws_acm_certificate.wordpress.arn
+  certificate_arn   = aws_iam_server_certificate.test_cert.arn
 
   default_action {
     type             = "forward"
