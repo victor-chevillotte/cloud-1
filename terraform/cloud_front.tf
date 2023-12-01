@@ -40,23 +40,24 @@ resource "aws_cloudfront_distribution" "wordpress" {
   }
 
   viewer_certificate {
-    iam_certificate_id      = aws_iam_server_certificate.test_cert.id
-    ssl_support_method      = "sni-only"
+    iam_certificate_id       = aws_iam_server_certificate.test_cert.id
+    ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2018"
   }
 }
 
 provider "aws" {
-  alias = "us-east-1"
+  alias  = "us-east-1"
   region = "us-east-1"
 }
 
 resource "aws_iam_server_certificate" "test_cert" {
-  provider = aws.us-east-1
-  name             = "${var.prefix}-test-cert"
-  certificate_body = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_2.cer")
+  provider          = aws.us-east-1
+  path              = "/cloudfront/test/"
+  name              = "${var.prefix}-test-cert3"
+  certificate_body  = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_2.cer")
   certificate_chain = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE_2.cer")
-  private_key      = file("${path.module}/ssl/mdesoeuv.com_private_key_1.key")
+  private_key       = file("${path.module}/ssl/mdesoeuv.com_private_key_1.key")
   lifecycle {
     create_before_destroy = true
   }
