@@ -1,4 +1,5 @@
 resource "aws_cloudfront_distribution" "wordpress" {
+  provider = aws.us-east-1
   aliases = ["cloud.mdesoeuv.com"]
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
@@ -15,23 +16,15 @@ resource "aws_cloudfront_distribution" "wordpress" {
   enabled         = true
   is_ipv6_enabled = true
 
-  default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
+default_cache_behavior {
+    cache_policy_id  = aws_cloudfront_cache_policy.cloud1.id
     target_origin_id = aws_lb.alb_wordpress.id
 
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
+    allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+
   }
 
   restrictions {
@@ -47,11 +40,6 @@ resource "aws_cloudfront_distribution" "wordpress" {
   }
 }
 
-provider "aws" {
-  alias  = "us-east-1"
-  region = "us-east-1"
-}
-
 resource "aws_iam_server_certificate" "test_cert" {
   provider          = aws.us-east-1
   path              = "/cloudfront/test/"
@@ -61,5 +49,29 @@ resource "aws_iam_server_certificate" "test_cert" {
   private_key       = file("${path.module}/ssl/mdesoeuv.com_private_key_1.key")
   lifecycle {
     create_before_destroy = true
+  }
+}
+
+
+
+resource "aws_cloudfront_cache_policy" "cloud1" {
+  name    = "cloud1"
+  min_ttl = 0
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["Host"]
+      }
+    }
+
+    query_strings_config {
+      query_string_behavior = "none"
+    }
   }
 }

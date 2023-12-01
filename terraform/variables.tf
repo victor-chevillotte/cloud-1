@@ -58,3 +58,15 @@ variable "db_password" {
   default = "wordpress"
   type    = string
 }
+
+variable "ionoscloud_username" {
+  description = "IONOS Cloud username"
+}
+
+variable "ionoscloud_password" {
+  description = "IONOS Cloud password"
+}
+
+variable "ionoscloud_dns_zone_id" {
+  description = "IONOS Cloud DNS zone ID"
+}
