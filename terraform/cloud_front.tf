@@ -1,4 +1,5 @@
 resource "aws_cloudfront_distribution" "wordpress" {
+  aliases = ["cloud.mdesoeuv.com"]
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
