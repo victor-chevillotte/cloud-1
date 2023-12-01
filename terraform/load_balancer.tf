@@ -15,7 +15,7 @@ resource "aws_lb_target_group" "tg_wordpress" {
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
 
-   stickiness {
+  stickiness {
     enabled = false
     type    = "lb_cookie"
   }
@@ -82,11 +82,28 @@ resource "aws_lb_target_group_attachment" "wordpress_attachment" {
   target_id        = aws_instance.wordpress[count.index].id
   port             = 80
 }
+/*
+resource "aws_lb_listener" "main" {
+  load_balancer_arn = aws_lb.alb_wordpress.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+   default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_wordpress.arn
+  }
+}
+
+resource "aws_lb_listener_certificate" "example" {
+  listener_arn    = aws_lb_listener.https_listener.arn
+  certificate_arn = aws_cloudfront_distribution.wordpress.viewer_certificate[0].acm_certificate_arn
+}
 
 resource "aws_lb_listener" "https_listener" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
 
   default_action {
     type             = "forward"
@@ -105,3 +122,35 @@ resource "aws_lb_listener" "https_listener" {
   }
 }
 
+*/
+
+
+# Modification de l'écouteur ALB pour ajouter HTTPS
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb_wordpress.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.wordpress.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_wordpress.arn
+  }
+}
+
+# Redirection HTTP vers HTTPS pour l'ALB
+resource "aws_lb_listener" "http_redirect" {
+  load_balancer_arn = aws_lb.alb_wordpress.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
