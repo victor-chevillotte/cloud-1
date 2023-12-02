@@ -59,14 +59,6 @@ variable "db_password" {
   type    = string
 }
 
-variable "ionoscloud_username" {
-  description = "IONOS Cloud username"
-}
-
-variable "ionoscloud_password" {
-  description = "IONOS Cloud password"
-}
-
 variable "ionoscloud_token" {
   description = "API KEY"
 }
