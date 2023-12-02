@@ -27,7 +27,7 @@ services:
         depends_on:
             - db
         ports:
-            - 80:80
+          - 8080:80
         restart: always
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
@@ -41,7 +41,7 @@ services:
           interval: 10s
           timeout: 10s
           retries: 3
-          start_period: 10s
+          start_period: 15s
         volumes:
             - wp_data:/var/www/html
         networks:
@@ -51,18 +51,17 @@ services:
         container_name: wpcli
         working_dir: /var/www/html
         image: wordpress:cli
-
+        depends_on:
+            wordpress:
+              condition: service_healthy
+            db:
+              condition: service_started
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
             WORDPRESS_DB_HOST: ${DB_HOST}
             WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
             WORDPRESS_TABLE_PREFIX: wp_
             WORDPRESS_DB_USER: ${MYSQL_USER}
-        depends_on:
-            wordpress:
-              condition: service_healthy
-            db:
-              condition: service_started
         user: xfs
         entrypoint: ["wp", "--allow-root"]
         command: >
@@ -73,6 +72,7 @@ services:
             - db_data:/var/lib/mysql
         networks:
             - wordpress
+
 
 volumes:
     db_data:
