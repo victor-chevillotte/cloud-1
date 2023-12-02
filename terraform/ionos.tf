@@ -1,27 +1,25 @@
-provider "ionoscloud" {
-  # Vos identifiants et configurations IONOS Cloud
-  username = var.ionoscloud_username
-  password = var.ionoscloud_password
+provider "ionosdeveloper" {
+    api_key = var.ionoscloud_token
 }
 
-resource "ionoscloud_dns_record" "cloudfront_cname" {
-  # Remplacez par l'ID de votre zone DNS
-  dns_zone_id = var.ionoscloud_dns_zone_id
-
-  # Nom de domaine pour le CNAME
-  name = "www" # ou le sous-domaine de votre choix
-  type = "CNAME"
-  content = aws.cloudfront_distribution.wordpress.domain_name
-  ttl = 3600
+data "ionosdeveloper_dns_zone" "example" {
+  name = var.domain_name
 }
 
-resource "ionoscloud_dns_record" "alb_cname" {
-  # Remplacez par l'ID de votre zone DNS
-  dns_zone_id = var.ionoscloud_dns_zone_id
+resource "ionosdeveloper_dns_record" "cloudfront_cname" {
+  zone_id = data.ionosdeveloper_dns_zone.example.id
 
-  # Nom de domaine pour le CNAME
-  name = "alb" # ou le sous-domaine de votre choix
-  type = "CNAME"
-  content = aws.lb.alb_wordpress.dns_name
-  ttl = 3600
+  name    = "cloud1.mdesoeuv.com"
+  type    = "CNAME"
+  content = aws_cloudfront_distribution.wordpress.domain_name
+  ttl     = 3600
 }
+
+# resource "ionosdeveloper_dns_record" "alb_cname" {
+#   zone_id = data.ionosdeveloper_dns_zone.example.id
+
+#   name    = "alb"
+#   type    = "CNAME"
+#   content = aws_lb.alb_wordpress.dns_name
+#   ttl     = 3600
+# }

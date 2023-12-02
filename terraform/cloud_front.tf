@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "wordpress" {
   provider = aws.us-east-1
-  aliases = ["cloud.mdesoeuv.com"]
+  # aliases  = [var.domain_name]
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
@@ -16,7 +16,7 @@ resource "aws_cloudfront_distribution" "wordpress" {
   enabled         = true
   is_ipv6_enabled = true
 
-default_cache_behavior {
+  default_cache_behavior {
     cache_policy_id  = aws_cloudfront_cache_policy.cloud1.id
     target_origin_id = aws_lb.alb_wordpress.id
 
@@ -44,9 +44,9 @@ resource "aws_iam_server_certificate" "test_cert" {
   provider          = aws.us-east-1
   path              = "/cloudfront/test/"
   name              = "${var.prefix}-test-cert3"
-  certificate_body  = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_2.cer")
-  certificate_chain = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE_2.cer")
-  private_key       = file("${path.module}/ssl/mdesoeuv.com_private_key_1.key")
+  certificate_body  = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate.cer")
+  certificate_chain = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE.cer")
+  private_key       = file("${path.module}/ssl/mdesoeuv.com_private_key.key")
   lifecycle {
     create_before_destroy = true
   }

@@ -67,6 +67,16 @@ variable "ionoscloud_password" {
   description = "IONOS Cloud password"
 }
 
-variable "ionoscloud_dns_zone_id" {
-  description = "IONOS Cloud DNS zone ID"
+variable "ionoscloud_token" {
+  description = "API KEY"
+}
+
+variable "domain_name" {
+  description = "Domain Name"
+  default     = "mdesoeuv.com"
+}
+
+variable "sub_domain_name" {
+  description = "Sub Domain Name"
+  default = "cloud1"
 }
