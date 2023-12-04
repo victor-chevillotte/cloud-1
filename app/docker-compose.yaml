@@ -50,7 +50,6 @@ services:
         networks:
             - wordpress
 
-
 volumes:
     wp_data:
 
