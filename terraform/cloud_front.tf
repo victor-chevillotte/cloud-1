@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "wordpress" {
   provider = aws.us-east-1
-  # aliases  = [var.domain_name]
+  aliases  = [var.domain_name]
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
@@ -13,6 +13,7 @@ resource "aws_cloudfront_distribution" "wordpress" {
     }
   }
 
+
   enabled         = true
   is_ipv6_enabled = true
 
@@ -24,6 +25,7 @@ resource "aws_cloudfront_distribution" "wordpress" {
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
     viewer_protocol_policy = "redirect-to-https"
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.example.id
 
   }
 
@@ -53,6 +55,20 @@ resource "aws_iam_server_certificate" "test_cert" {
 }
 
 
+# Define the Origin Request Policy
+resource "aws_cloudfront_origin_request_policy" "example" {
+  name    = "example-policy"
+  comment = "example comment"
+  cookies_config {
+    cookie_behavior = "all"
+  }
+  headers_config {
+    header_behavior = "allViewer"
+  }
+  query_strings_config {
+    query_string_behavior = "all"
+  }
+}
 
 resource "aws_cloudfront_cache_policy" "cloud1" {
   name    = "cloud1"

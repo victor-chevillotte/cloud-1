@@ -88,28 +88,28 @@ resource "aws_lb_target_group_attachment" "wordpress_attachment" {
   port             = 8080
 }
 
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.alb_wordpress.arn
-  port              = "8080"
-  protocol          = "HTTP"
-  # ssl_policy        = "ELBSecurityPolicy-2016-08"
-  # certificate_arn   = aws_iam_server_certificate.test_cert.arn
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tg_wordpress.arn
-  }
-}
-
-# resource "aws_lb_listener" "https" {
+# resource "aws_lb_listener" "http" {
 #   load_balancer_arn = aws_lb.alb_wordpress.arn
-#   port              = "443"
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-2016-08"
-#   certificate_arn   = aws_iam_server_certificate.test_cert.arn
+#   port              = "8080"
+#   protocol          = "HTTP"
+#   # ssl_policy        = "ELBSecurityPolicy-2016-08"
+#   # certificate_arn   = aws_iam_server_certificate.test_cert.arn
 
 #   default_action {
 #     type             = "forward"
 #     target_group_arn = aws_lb_target_group.tg_wordpress.arn
 #   }
 # }
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb_wordpress.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_iam_server_certificate.test_cert.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_wordpress.arn
+  }
+}
