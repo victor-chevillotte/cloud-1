@@ -1,31 +1,10 @@
 version: "3.8"
 
 services:
-    db:
-      image: mariadb:10.6.4-focal
-      container_name: maria-db
-      command: '--default-authentication-plugin=mysql_native_password'
-      volumes:
-        - db_data:/var/lib/mysql
-      restart: always
-      environment:
-        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-        - MYSQL_DATABASE=${MYSQL_DATABASE}
-        - MYSQL_USER=${MYSQL_USER}
-        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      expose:
-        - 3306
-      ports:
-        - 3306:3306
-      networks:
-        - wordpress
-
     wordpress:
         container_name: wordpress
         working_dir: /var/www/html
         image: wordpress:latest
-        depends_on:
-            - db
         ports:
           - 8080:80
         restart: always
@@ -54,8 +33,6 @@ services:
         depends_on:
             wordpress:
               condition: service_healthy
-            db:
-              condition: service_started
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
             WORDPRESS_DB_HOST: ${DB_HOST}
@@ -69,13 +46,11 @@ services:
             
         volumes:
             - wp_data:/var/www/html
-            - db_data:/var/lib/mysql
         networks:
             - wordpress
 
 
 volumes:
-    db_data:
     wp_data:
 
 networks:

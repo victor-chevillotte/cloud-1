@@ -1,4 +1,4 @@
-resource "aws_db_instance" "default" {
+resource "aws_db_instance" "wordpress" {
   allocated_storage                   = 5
   engine                              = "mysql"
   engine_version                      = "5.7"
@@ -8,7 +8,7 @@ resource "aws_db_instance" "default" {
   password                            = var.db_password
   parameter_group_name                = "default.mysql5.7"
   skip_final_snapshot                 = true
-  identifier                          = "my-rds"
+  identifier                          = "${var.prefix}-wordpress"
   iam_database_authentication_enabled = true
   db_subnet_group_name                = aws_db_subnet_group.my_rds.name
   vpc_security_group_ids              = [aws_security_group.rds.id]

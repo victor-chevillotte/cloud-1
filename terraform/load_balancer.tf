@@ -22,10 +22,9 @@ resource "aws_lb_target_group" "tg_wordpress" {
 
   #health check is docker up ?
   health_check {
-    
     path    = "/index.html"
     port    = 8080
-    matcher = 302
+    matcher = 200
   }
 
 
