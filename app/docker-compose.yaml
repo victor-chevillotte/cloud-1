@@ -7,6 +7,7 @@ services:
         image: wordpress:latest
         ports:
           - 8080:80
+          - 3306:3306
         restart: always
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
