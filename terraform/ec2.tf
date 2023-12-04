@@ -24,7 +24,9 @@ data "cloudinit_config" "config" {
           path        = "/tmp/.env"
           permissions = "0644"
           owner       = "root:root"
-          content     = file("${path.module}/../app/.env")
+          content     = templatefile("${path.module}/../app/.env", {
+            WORDPRESS_URL = "${var.sub_domain_name}.${var.domain_name}"
+          })
         }
       ]
     })
