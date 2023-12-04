@@ -39,7 +39,7 @@ variable "alb_name" {
 }
 
 variable "instance_count" {
-  default = 3
+  default = 2
   type    = number
 }
 
@@ -59,14 +59,6 @@ variable "db_password" {
   type    = string
 }
 
-variable "ionoscloud_username" {
-  description = "IONOS Cloud username"
-}
-
-variable "ionoscloud_password" {
-  description = "IONOS Cloud password"
-}
-
 variable "ionoscloud_token" {
   description = "API KEY"
 }
@@ -78,5 +70,4 @@ variable "domain_name" {
 
 variable "sub_domain_name" {
   description = "Sub Domain Name"
-  default = "cloud1"
 }

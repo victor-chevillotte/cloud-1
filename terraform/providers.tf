@@ -6,7 +6,7 @@ terraform {
       version = "~> 5.26.0"
     }
     ionosdeveloper = {
-      source = "ionos-developer/ionosdeveloper"
+      source  = "ionos-developer/ionosdeveloper"
       version = "0.0.1"
     }
   }

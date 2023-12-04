@@ -1,5 +1,5 @@
 provider "ionosdeveloper" {
-    api_key = var.ionoscloud_token
+  api_key = var.ionoscloud_token
 }
 
 data "ionosdeveloper_dns_zone" "example" {
