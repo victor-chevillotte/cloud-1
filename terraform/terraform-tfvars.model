@@ -1,0 +1,5 @@
+ionoscloud_token = "a2bf7e2b8b644e018598ca45a53a411a.5OZUzC_rDotzLrJvxoVPrX-b-N40aoJqBLuqNUJfaWBNqMtVFszssWU1SsCAaQfM48DXAIuPXRXompbAd8o5MA"
+sub_domain_name  = "cloud"
+db_name          = "wordpress"
+db_username      = "wordpress"
+db_password      = "wordpress"

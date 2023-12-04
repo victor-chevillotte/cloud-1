@@ -44,18 +44,15 @@ variable "instance_count" {
 }
 
 variable "db_name" {
-  default = "wordpress"
   type    = string
 }
 
 variable "db_username" {
-  default = "wordpress"
   type    = string
 }
 
 
 variable "db_password" {
-  default = "wordpress"
   type    = string
 }
 
