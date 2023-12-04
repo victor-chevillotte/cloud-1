@@ -20,8 +20,9 @@ resource "aws_lb_target_group" "tg_wordpress" {
     ignore_changes        = [name]
   }
 
-  #health check is docker up ?
+  # health check is docker up ?
   # health_check {
+  #   enabled = true
   #   path    = "/index.html"
   #   port    = 8080
   #   matcher = 200
@@ -98,7 +99,7 @@ resource "aws_lb_listener" "redirect_https" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "redirect"
+    type = "redirect"
     redirect {
       port        = "443"
       protocol    = "HTTPS"
