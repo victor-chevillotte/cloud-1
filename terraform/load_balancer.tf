@@ -15,11 +15,6 @@ resource "aws_lb_target_group" "tg_wordpress" {
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
 
-  # stickiness {
-  #   enabled = false
-  #   type    = "lb_cookie"
-  # }
-
   lifecycle {
     create_before_destroy = true
     ignore_changes        = [name]
@@ -88,18 +83,20 @@ resource "aws_lb_target_group_attachment" "wordpress_attachment" {
   port             = 8080
 }
 
-# resource "aws_lb_listener" "http" {
-#   load_balancer_arn = aws_lb.alb_wordpress.arn
-#   port              = "8080"
-#   protocol          = "HTTP"
-#   # ssl_policy        = "ELBSecurityPolicy-2016-08"
-#   # certificate_arn   = aws_iam_server_certificate.test_cert.arn
+resource "aws_lb_listener" "redirect_https" {
+  load_balancer_arn = aws_lb.alb_wordpress.arn
+  port              = "80"
+  protocol          = "HTTP"
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.tg_wordpress.arn
-#   }
-# }
+  default_action {
+    type             = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
 
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
