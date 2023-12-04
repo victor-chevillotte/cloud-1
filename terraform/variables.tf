@@ -70,5 +70,4 @@ variable "domain_name" {
 
 variable "sub_domain_name" {
   description = "Sub Domain Name"
-  default = "cloud1"
 }
