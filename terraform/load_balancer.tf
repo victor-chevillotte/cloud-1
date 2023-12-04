@@ -19,6 +19,16 @@ resource "aws_lb_target_group" "tg_wordpress" {
     create_before_destroy = true
     ignore_changes        = [name]
   }
+
+  #health check is docker up ?
+  health_check {
+    
+    path    = "/index.html"
+    port    = 8080
+    matcher = 302
+  }
+
+
 }
 
 resource "aws_security_group" "alb_sg" {
