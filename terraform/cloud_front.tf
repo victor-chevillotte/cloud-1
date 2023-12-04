@@ -55,7 +55,6 @@ resource "aws_iam_server_certificate" "test_cert" {
 }
 
 
-# Define the Origin Request Policy
 resource "aws_cloudfront_origin_request_policy" "example" {
   name    = "example-policy"
   comment = "example comment"
