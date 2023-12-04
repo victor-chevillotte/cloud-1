@@ -24,7 +24,7 @@ resource "aws_cloudfront_distribution" "wordpress" {
     allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
-    viewer_protocol_policy = "redirect-to-https"
+    viewer_protocol_policy = "allow-all"
     origin_request_policy_id = aws_cloudfront_origin_request_policy.example.id
 
   }
