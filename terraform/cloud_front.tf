@@ -24,7 +24,7 @@ resource "aws_cloudfront_distribution" "wordpress" {
     allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
-    viewer_protocol_policy = "redirect-to-https" #"allow-all"
+    viewer_protocol_policy   = "redirect-to-https" #"allow-all"
     origin_request_policy_id = aws_cloudfront_origin_request_policy.example.id
 
   }
@@ -63,9 +63,9 @@ resource "aws_cloudfront_origin_request_policy" "example" {
   }
   headers_config {
     header_behavior = "whitelist"
-      headers {
-        items = ["Host"]
-      }
+    headers {
+      items = ["Host"]
+    }
   }
   query_strings_config {
     query_string_behavior = "all"
