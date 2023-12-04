@@ -9,7 +9,7 @@ data "ionosdeveloper_dns_zone" "example" {
 resource "ionosdeveloper_dns_record" "cloudfront_cname" {
   zone_id = data.ionosdeveloper_dns_zone.example.id
 
-  name    = "cloud1.mdesoeuv.com"
+  name    = "${var.sub_domain_name}.${var.domain_name}"
   type    = "CNAME"
   content = aws_cloudfront_distribution.wordpress.domain_name
   ttl     = 3600
