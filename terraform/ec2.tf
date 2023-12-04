@@ -30,7 +30,6 @@ data "cloudinit_config" "config" {
             RDS_USER      = var.db_username
             RDS_PASSWORD  = var.db_password
             RDS_DB_NAME   = var.db_name
-            MYSQL_ROOT_PASSWORD = var.db_password
           })
         }
       ]
