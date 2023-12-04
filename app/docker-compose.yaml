@@ -37,7 +37,7 @@ services:
             WORDPRESS_DB_USER: ${MYSQL_USER}
             WORDPRESS_DEBUG: 1
         healthcheck:
-          test: "curl --fail -H 'Host: ${WP_URL}' http://localhost:8080/ || exit 1"
+          test: [ "CMD", "curl", "--fail", "http://localhost" ]
           interval: 10s
           timeout: 10s
           retries: 3
