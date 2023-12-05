@@ -45,7 +45,7 @@ resource "aws_cloudfront_distribution" "cloud1" {
 resource "aws_iam_server_certificate" "cloud1_cert" {
   provider          = aws.us-east-1
   path              = "/cloudfront/test/"
-  name              = "${var.prefix}-test-cert3"
+  name              = "${var.prefix}-cert"
   certificate_body  = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate.cer")
   certificate_chain = file("${path.module}/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE.cer")
   private_key       = file("${path.module}/ssl/mdesoeuv.com_private_key.key")
