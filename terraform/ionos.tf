@@ -15,11 +15,11 @@ resource "ionosdeveloper_dns_record" "cloudfront_cname" {
   ttl     = 3600
 }
 
-# resource "ionosdeveloper_dns_record" "alb_cname" {
-#   zone_id = data.ionosdeveloper_dns_zone.example.id
+resource "ionosdeveloper_dns_record" "phpmyadmin_cname" {
+  zone_id = data.ionosdeveloper_dns_zone.example.id
 
-#   name    = "alb"
-#   type    = "CNAME"
-#   content = aws_lb.alb_wordpress.dns_name
-#   ttl     = 3600
-# }
+  name    = "phpmyadmin.${var.domain_name}"
+  type    = "CNAME"
+  content = aws_cloudfront_distribution.wordpress.domain_name
+  ttl     = 3600
+}

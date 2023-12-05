@@ -139,8 +139,8 @@ resource "aws_lb_listener_rule" "phpmyadmin" {
   }
 
   condition {
-    path_pattern {
-      values = ["/phpmyadmin/*"]
+    host_header {
+      values = ["phpmyadmin.${var.domain_name}"]
     }
   }
 }

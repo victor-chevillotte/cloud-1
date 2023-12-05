@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "wordpress" {
   provider = aws.us-east-1
-  aliases  = ["${var.sub_domain_name}.${var.domain_name}"]
+  aliases  = ["${var.sub_domain_name}.${var.domain_name}", "phpmyadmin.${var.domain_name}"]
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
