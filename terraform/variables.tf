@@ -39,7 +39,6 @@ variable "alb_name" {
 }
 
 variable "instance_count" {
-  default = 2
   type    = number
 }
 
