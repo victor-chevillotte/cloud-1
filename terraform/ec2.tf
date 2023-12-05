@@ -52,20 +52,6 @@ data "aws_ami" "linux" {
   }
 }
 
-resource "aws_instance" "wordpress" {
-  depends_on = [ aws_db_instance.wordpress ]
-  count                       = var.instance_count
-  ami                         = data.aws_ami.linux.id
-  instance_type               = var.instance_type
-  associate_public_ip_address = true
-  key_name                    = aws_key_pair.ec2-key-pair.key_name
-  user_data_base64            = data.cloudinit_config.config.rendered
-  user_data_replace_on_change = true
-  security_groups             = [aws_security_group.dev-ec2.name]
-  tags = {
-    Name = "wordpress Instance"
-  }
-}
 
 resource "aws_key_pair" "ec2-key-pair" {
   key_name   = "ec2-wordpress-key-pair"
@@ -134,4 +120,32 @@ resource "aws_security_group" "dev-ec2" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+}
+
+
+# Launch Configuration
+resource "aws_launch_configuration" "wordpress_lc" {
+  depends_on = [ aws_db_instance.wordpress ]
+  name_prefix   = "wordpress-lc-"
+  image_id      = data.aws_ami.linux.id
+  instance_type = var.instance_type
+  key_name      = aws_key_pair.ec2-key-pair.key_name
+
+  security_groups = [aws_security_group.dev-ec2.id]
+
+  user_data_base64 = data.cloudinit_config.config.rendered
+  associate_public_ip_address = true
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Auto Scaling Group
+resource "aws_autoscaling_group" "wordpress_asg" {
+  desired_capacity     = var.asg_desired_capacity
+  max_size             = var.asg_max_size
+  min_size             = var.asg_min_size
+  vpc_zone_identifier  = data.aws_subnets.default.ids
+  launch_configuration = aws_launch_configuration.wordpress_lc.id
 }

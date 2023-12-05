@@ -96,20 +96,15 @@ resource "aws_lb" "alb_wordpress" {
   subnets            = data.aws_subnets.default.ids
 }
 
-resource "aws_lb_target_group_attachment" "wordpress_attachment" {
-  depends_on       = [aws_instance.wordpress]
-  count            = length(aws_instance.wordpress)
-  target_group_arn = aws_lb_target_group.tg_wordpress.arn
-  target_id        = aws_instance.wordpress[count.index].id
-  port             = 8080
+resource "aws_autoscaling_attachment" "wordpress_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
+  lb_target_group_arn    = aws_lb_target_group.tg_wordpress.arn
 }
 
-resource "aws_lb_target_group_attachment" "phpmyadmin_attachment" {
-  depends_on       = [aws_instance.wordpress]
-  count            = length(aws_instance.wordpress)
-  target_group_arn = aws_lb_target_group.tg_phpmyadmin.arn
-  target_id        = aws_instance.wordpress[count.index].id
-  port             = 8081
+
+resource "aws_autoscaling_attachment" "phpmyadmin_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
+  lb_target_group_arn    = aws_lb_target_group.tg_phpmyadmin.arn
 }
 
 

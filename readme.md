@@ -1,5 +1,6 @@
 auto scalling group
 rds replica standby
+Traefik po
 
 ### Deployment Architecture
 
