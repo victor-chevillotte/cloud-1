@@ -43,7 +43,7 @@ services:
         user: xfs
         entrypoint: ["wp", "--allow-root"]
         command: >
-            core install --path="/var/www/html" --url=${WP_URL} --title=${WP_TITLE} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL};
+            core install --path="/var/www/html" --url=${WP_URL} --title=${WP_TITLE}@${HOSTNAME} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL};
             wp --allow-root plugin install server-ip-memory-usage --activate
         volumes:
             - wp_data:/var/www/html
@@ -67,6 +67,28 @@ services:
         entrypoint: ["wp", "--allow-root"]
         command: >
             plugin install server-ip-memory-usage --activate
+        volumes:
+            - wp_data:/var/www/html
+        networks:
+            - wordpress
+
+    wpcli-plugin-2:
+        container_name: wpcli-plugin-2
+        working_dir: /var/www/html
+        image: wordpress:cli
+        depends_on:
+            wpcli-plugin:
+              condition: service_completed_successfully
+        environment:
+            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+            WORDPRESS_DB_HOST: ${DB_HOST}
+            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+            WORDPRESS_TABLE_PREFIX: wp_
+            WORDPRESS_DB_USER: ${MYSQL_USER}
+        user: xfs
+        entrypoint: ["wp", "--allow-root"]
+        command: >
+            plugin install classic-editor --activate
         volumes:
             - wp_data:/var/www/html
         networks:
