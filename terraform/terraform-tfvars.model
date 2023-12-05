@@ -3,4 +3,6 @@ wordpress_sub_domain_name  =
 db_name          = 
 db_username      = 
 db_password      = 
-instance_count   =
+instance_count             = 
+phpmyadmin_sub_domain_name = 
+traefik_sub_domain_name    =

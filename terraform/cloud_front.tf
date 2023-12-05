@@ -1,6 +1,6 @@
-resource "aws_cloudfront_distribution" "wordpress" {
+resource "aws_cloudfront_distribution" "cloud1" {
   provider = aws.us-east-1
-  aliases  = ["${var.wordpress_sub_domain_name}.${var.domain_name}", "phpmyadmin.${var.domain_name}", "traefik.${var.domain_name}"]
+  aliases  = ["${var.wordpress_sub_domain_name}.${var.domain_name}", "${var.phpmyadmin_sub_domain_name}.${var.domain_name}", "${var.traefik_sub_domain_name}.${var.domain_name}"]
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
@@ -24,8 +24,8 @@ resource "aws_cloudfront_distribution" "wordpress" {
     allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
-    viewer_protocol_policy   = "redirect-to-https" #"allow-all"
-    origin_request_policy_id = aws_cloudfront_origin_request_policy.example.id
+    viewer_protocol_policy   = "redirect-to-https"
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.cloud1.id
 
   }
 
@@ -36,13 +36,13 @@ resource "aws_cloudfront_distribution" "wordpress" {
   }
 
   viewer_certificate {
-    iam_certificate_id       = aws_iam_server_certificate.test_cert.id
+    iam_certificate_id       = aws_iam_server_certificate.cloud1_cert.id
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2018"
   }
 }
 
-resource "aws_iam_server_certificate" "test_cert" {
+resource "aws_iam_server_certificate" "cloud1_cert" {
   provider          = aws.us-east-1
   path              = "/cloudfront/test/"
   name              = "${var.prefix}-test-cert3"
@@ -55,7 +55,7 @@ resource "aws_iam_server_certificate" "test_cert" {
 }
 
 
-resource "aws_cloudfront_origin_request_policy" "example" {
+resource "aws_cloudfront_origin_request_policy" "cloud1" {
   name = "example-policy"
 
   cookies_config {

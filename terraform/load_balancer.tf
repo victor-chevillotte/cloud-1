@@ -9,27 +9,6 @@ data "aws_subnets" "default" {
   }
 }
 
-# resource "aws_lb_target_group" "tg_phpmyadmin" {
-#   name     = "${var.prefix}-${var.target_group_name}-${substr(uuid(), 0, 3)}"
-#   port     = 8081 #port of phpmyadmin
-#   protocol = "HTTP"
-#   vpc_id   = data.aws_vpc.default.id
-
-#   lifecycle {
-#     create_before_destroy = true
-#     ignore_changes        = [name]
-#   }
-
-#   # health check is docker up ?
-#   # health_check {
-#   #   enabled = true
-#   #   path    = "/index.html"
-#   #   port    = 8080
-#   #   matcher = 200
-#   # }
-# }
-
-
 resource "aws_lb_target_group" "tg_traefik" {
   name     = "${var.prefix}-${var.target_group_name}-${substr(uuid(), 0, 3)}"
   port     = 8080 #port of trafeik
@@ -101,13 +80,6 @@ resource "aws_autoscaling_attachment" "wordpress_attachment" {
   lb_target_group_arn    = aws_lb_target_group.tg_traefik.arn
 }
 
-
-# resource "aws_autoscaling_attachment" "phpmyadmin_attachment" {
-#   autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
-#   lb_target_group_arn    = aws_lb_target_group.tg_phpmyadmin.arn
-# }
-
-
 resource "aws_lb_listener" "redirect_https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
   port              = "80"
@@ -124,30 +96,13 @@ resource "aws_lb_listener" "redirect_https" {
 }
 
 
-# resource "aws_lb_listener_rule" "phpmyadmin" {
-#   listener_arn = aws_lb_listener.https.arn
-#   priority     = 100
-
-#   action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.tg_phpmyadmin.arn
-#   }
-
-#   condition {
-#     host_header {
-#       values = ["phpmyadmin.${var.domain_name}"]
-#     }
-#   }
-# }
-
-
 
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = aws_iam_server_certificate.test_cert.arn
+  certificate_arn   = aws_iam_server_certificate.cloud1_cert.arn
 
   default_action {
     type             = "forward"

@@ -26,7 +26,7 @@ data "cloudinit_config" "config" {
           owner       = "root:root"
           content = templatefile("${path.module}/../app/.env", {
             WORDPRESS_URL = "${var.wordpress_sub_domain_name}.${var.domain_name}"
-            RDS_HOST      = aws_db_instance.wordpress.address
+            RDS_HOST      = aws_db_instance.cloud1.address
             RDS_USER      = var.db_username
             RDS_PASSWORD  = var.db_password
             RDS_DB_NAME   = var.db_name
@@ -69,7 +69,7 @@ resource "local_file" "ec2-key" {
 }
 
 resource "aws_security_group" "dev-ec2" {
-  name        = "wordpress-ec2-sg"
+  name        = "${var.prefix}-ec2-${var.target_group_name}"
   description = "rules for wordpress-ec2"
 
   ingress {
@@ -125,7 +125,7 @@ resource "aws_security_group" "dev-ec2" {
 
 # Launch Configuration
 resource "aws_launch_configuration" "wordpress_lc" {
-  depends_on    = [aws_db_instance.wordpress]
+  depends_on    = [aws_db_instance.cloud1]
   name_prefix   = "wordpress-lc-"
   image_id      = data.aws_ami.linux.id
   instance_type = var.instance_type

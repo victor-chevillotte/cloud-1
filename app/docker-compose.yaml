@@ -12,6 +12,7 @@ services:
             - "--api.dashboard=true"
         labels:
             - "entryPoints.web.forwardedHeaders.insecure"
+            - "entryPoints.web.proxyProtocol.insecure"
             - "traefik.http.routers.traefik.rule=Host(`traefik.mdesoeuv.com`)"
             - "traefik.http.routers.traefik.service=api@internal"
             - "traefik.http.routers.traefik.entrypoints=websecure"
@@ -28,6 +29,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "entryPoints.web.forwardedHeaders.insecure"
+            - "entryPoints.web.proxyProtocol.insecure"
             - "traefik.http.routers.wordpress.rule=Host(`cloud.mdesoeuv.com`)"
             - "traefik.http.services.wordpress.loadbalancer.server.port=80"
 
@@ -60,6 +62,7 @@ services:
         labels:
             - "traefik.enable=true"
             - "entryPoints.web.forwardedHeaders.insecure"
+            - "entryPoints.web.proxyProtocol.insecure"
             - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.mdesoeuv.com`)"
             - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
 

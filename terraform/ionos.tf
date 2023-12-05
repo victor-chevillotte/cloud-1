@@ -11,16 +11,16 @@ resource "ionosdeveloper_dns_record" "cloudfront_cname" {
 
   name    = "${var.wordpress_sub_domain_name}.${var.domain_name}"
   type    = "CNAME"
-  content = aws_cloudfront_distribution.wordpress.domain_name
+  content = aws_cloudfront_distribution.cloud1.domain_name
   ttl     = 3600
 }
 
 resource "ionosdeveloper_dns_record" "phpmyadmin_cname" {
   zone_id = data.ionosdeveloper_dns_zone.example.id
 
-  name    = "phpmyadmin.${var.domain_name}"
+  name    = "${var.phpmyadmin_sub_domain_name}.${var.domain_name}"
   type    = "CNAME"
-  content = aws_cloudfront_distribution.wordpress.domain_name
+  content = aws_cloudfront_distribution.cloud1.domain_name
   ttl     = 3600
 }
 
@@ -28,8 +28,8 @@ resource "ionosdeveloper_dns_record" "phpmyadmin_cname" {
 resource "ionosdeveloper_dns_record" "traefik_cname" {
   zone_id = data.ionosdeveloper_dns_zone.example.id
 
-  name    = "traefik.${var.domain_name}"
+  name    = "${var.traefik_sub_domain_name}.${var.domain_name}"
   type    = "CNAME"
-  content = aws_cloudfront_distribution.wordpress.domain_name
+  content = aws_cloudfront_distribution.cloud1.domain_name
   ttl     = 3600
 }

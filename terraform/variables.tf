@@ -65,7 +65,15 @@ variable "domain_name" {
 }
 
 variable "wordpress_sub_domain_name" {
-  description = "Sub Domain Name"
+  description = "Wordpress Sub Domain Name"
+}
+
+variable "traefik_sub_domain_name" {
+  description = "Traefik Sub Domain Name"
+}
+
+variable "phpmyadmin_sub_domain_name" {
+  description = "PhpMyAdmin Sub Domain Name"
 }
 
 variable "asg_desired_capacity" {

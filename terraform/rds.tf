@@ -1,4 +1,4 @@
-resource "aws_db_instance" "wordpress" {
+resource "aws_db_instance" "cloud1" {
   allocated_storage = 20
   engine            = "mariadb"
   storage_type      = "gp2"
@@ -10,19 +10,19 @@ resource "aws_db_instance" "wordpress" {
   password                = var.db_password
   skip_final_snapshot     = true
   backup_retention_period = 2 #days
-  identifier              = "${var.prefix}-wordpress"
-  db_subnet_group_name    = aws_db_subnet_group.my_rds.name
-  vpc_security_group_ids  = [aws_security_group.rds.id]
+  identifier              = "${var.prefix}-${var.db_name}"
+  db_subnet_group_name    = aws_db_subnet_group.cloud1.name
+  vpc_security_group_ids  = [aws_security_group.cloud1.id]
 
 }
 
-resource "aws_db_subnet_group" "my_rds" {
-  name       = "my_db_subnets"
+resource "aws_db_subnet_group" "cloud1" {
+  name       = "${var.prefix}-${var.db_name}"
   subnet_ids = data.aws_subnets.default.ids
 }
 
-resource "aws_security_group" "rds" {
-  name = "my_rds"
+resource "aws_security_group" "cloud1" {
+  name = "${var.prefix}-rds-${var.db_name}"
 
   ingress {
     from_port       = 3306
