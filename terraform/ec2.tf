@@ -53,6 +53,7 @@ data "aws_ami" "linux" {
 }
 
 resource "aws_instance" "wordpress" {
+  depends_on = [ aws_db_instance.wordpress ]
   count                       = var.instance_count
   ami                         = data.aws_ami.linux.id
   instance_type               = var.instance_type
