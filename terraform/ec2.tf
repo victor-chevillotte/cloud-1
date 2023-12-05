@@ -25,7 +25,7 @@ data "cloudinit_config" "config" {
           permissions = "0644"
           owner       = "root:root"
           content = templatefile("${path.module}/../app/.env", {
-            WORDPRESS_URL = "${var.sub_domain_name}.${var.domain_name}"
+            WORDPRESS_URL = "${var.wordpress_sub_domain_name}.${var.domain_name}"
             RDS_HOST      = aws_db_instance.wordpress.address
             RDS_USER      = var.db_username
             RDS_PASSWORD  = var.db_password
@@ -125,7 +125,7 @@ resource "aws_security_group" "dev-ec2" {
 
 # Launch Configuration
 resource "aws_launch_configuration" "wordpress_lc" {
-  depends_on = [ aws_db_instance.wordpress ]
+  depends_on    = [aws_db_instance.wordpress]
   name_prefix   = "wordpress-lc-"
   image_id      = data.aws_ami.linux.id
   instance_type = var.instance_type
@@ -133,7 +133,7 @@ resource "aws_launch_configuration" "wordpress_lc" {
 
   security_groups = [aws_security_group.dev-ec2.id]
 
-  user_data_base64 = data.cloudinit_config.config.rendered
+  user_data_base64            = data.cloudinit_config.config.rendered
   associate_public_ip_address = true
 
   lifecycle {

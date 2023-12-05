@@ -1,6 +1,6 @@
 resource "aws_cloudfront_distribution" "wordpress" {
   provider = aws.us-east-1
-  aliases  = ["${var.sub_domain_name}.${var.domain_name}", "phpmyadmin.${var.domain_name}", "traefik.${var.domain_name}"]
+  aliases  = ["${var.wordpress_sub_domain_name}.${var.domain_name}", "phpmyadmin.${var.domain_name}", "traefik.${var.domain_name}"]
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id
@@ -56,7 +56,7 @@ resource "aws_iam_server_certificate" "test_cert" {
 
 
 resource "aws_cloudfront_origin_request_policy" "example" {
-  name    = "example-policy"
+  name = "example-policy"
 
   cookies_config {
     cookie_behavior = "all"
@@ -73,7 +73,7 @@ resource "aws_cloudfront_origin_request_policy" "example" {
 }
 
 resource "aws_cloudfront_cache_policy" "cloud1" {
-  name    = "cloud1"
+  name = "cloud1"
 
   default_ttl = 10
   max_ttl     = 20

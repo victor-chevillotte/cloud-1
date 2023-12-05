@@ -1,5 +1,5 @@
 ionoscloud_token =
-sub_domain_name  =
+wordpress_sub_domain_name  =
 db_name          = 
 db_username      = 
 db_password      = 
