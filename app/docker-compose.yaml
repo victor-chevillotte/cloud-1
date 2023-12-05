@@ -79,7 +79,7 @@ services:
         user: xfs
         entrypoint: ["wp", "--allow-root"]
         command: >
-            plugin install server-ip-memory-usage classic-editor --activate
+            plugin install server-ip-memory-usage --activate
         volumes:
             - wp_data:/var/www/html
         networks:
