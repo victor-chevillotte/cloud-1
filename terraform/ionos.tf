@@ -23,3 +23,13 @@ resource "ionosdeveloper_dns_record" "phpmyadmin_cname" {
   content = aws_cloudfront_distribution.wordpress.domain_name
   ttl     = 3600
 }
+
+
+resource "ionosdeveloper_dns_record" "traefik_cname" {
+  zone_id = data.ionosdeveloper_dns_zone.example.id
+
+  name    = "traefik.${var.domain_name}"
+  type    = "CNAME"
+  content = aws_cloudfront_distribution.wordpress.domain_name
+  ttl     = 3600
+}

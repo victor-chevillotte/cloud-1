@@ -10,6 +10,10 @@ services:
             - "--entrypoints.web.address=:80"
             - "--log.level=DEBUG"
             - "--api.dashboard=true"
+        labels:
+            - "traefik.http.routers.traefik.rule=PathPrefix(`/traefik`)"
+            - "traefik.http.routers.traefik.service=api@internal"
+            - "traefik.http.routers.traefik.entrypoints=websecure"
         ports:
             - "80:80"
             - "8080:8080"
@@ -24,6 +28,7 @@ services:
             - "traefik.enable=true"
             - "traefik.http.routers.wordpress.rule=Host(`cloud.mdesoeuv.com`)"
             - "traefik.http.services.wordpress.loadbalancer.server.port=80"
+
         working_dir: /var/www/html
         image: wordpress:latest
         #ports:
@@ -52,8 +57,9 @@ services:
         container_name: phpmyadmin
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.mdesoeuv.com`)"
+            - "traefik.http.routers.phpmyadmin.rule=PathPrefix(`/phpmyadmin`)"
             - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+
         image: phpmyadmin/phpmyadmin
         #ports:
         #    - "8081:80"
