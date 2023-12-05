@@ -3,15 +3,16 @@ resource "aws_db_instance" "wordpress" {
   engine            = "mariadb"
   storage_type      = "gp2"
 
-  engine_version         = "10.6.14"
-  instance_class         = "db.t3.micro"
-  db_name                = var.db_name
-  username               = var.db_username
-  password               = var.db_password
-  skip_final_snapshot    = true
-  identifier             = "${var.prefix}-wordpress"
-  db_subnet_group_name   = aws_db_subnet_group.my_rds.name
-  vpc_security_group_ids = [aws_security_group.rds.id]
+  engine_version          = "10.6.14"
+  instance_class          = "db.t3.micro"
+  db_name                 = var.db_name
+  username                = var.db_username
+  password                = var.db_password
+  skip_final_snapshot     = true
+  backup_retention_period = 2 #days
+  identifier              = "${var.prefix}-wordpress"
+  db_subnet_group_name    = aws_db_subnet_group.my_rds.name
+  vpc_security_group_ids  = [aws_security_group.rds.id]
 
 }
 
@@ -34,11 +35,10 @@ resource "aws_security_group" "rds" {
 
 
 resource "aws_db_instance" "wordpress_replica" {
-  allocated_storage = 20
-  engine            = "mariadb"
-  storage_type      = "gp2"
-  engine_version    = "10.6.14"
-  identifier        = "${var.prefix}-wordpress-replica"
+  engine         = "mariadb"
+  storage_type   = "gp2"
+  engine_version = "10.6.14"
+  identifier     = "${var.prefix}-wordpress-replica"
 
   instance_class         = "db.t3.micro"
   db_subnet_group_name   = aws_db_subnet_group.my_rds.name
