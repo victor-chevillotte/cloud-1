@@ -1,6 +1,4 @@
-auto scalling group
-rds replica standby
-Traefik po
+test reboot auto des ec2 et docker
 
 ### Deployment Architecture
 
