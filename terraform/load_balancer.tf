@@ -41,13 +41,13 @@ resource "aws_lb_target_group" "tg_traefik" {
     ignore_changes        = [name]
   }
 
-  # health check is docker up ?
-  # health_check {
-  #   enabled = true
-  #   path    = "/index.html"
-  #   port    = 8080
-  #   matcher = 200
-  # }
+  health_check {
+    enabled = true
+    path    = "/"
+    port    = 8080
+    matcher = "200,201,301,302"
+  }
+
 }
 
 resource "aws_security_group" "alb_sg" {

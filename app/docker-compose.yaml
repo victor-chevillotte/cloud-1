@@ -4,24 +4,26 @@ services:
     traefik:
         image: traefik:v2.3
         command:
-          - "--api.insecure=true"
-          - "--providers.docker=true"
-          - "--providers.docker.exposedByDefault=false"
-          - "--entrypoints.web.address=:80"
+            - "--api.insecure=true"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedByDefault=false"
+            - "--entrypoints.web.address=:80"
+            - "--log.level=DEBUG"
+            - "--api.dashboard=true"
         ports:
-          - "80:80"
-          - "8080:8080"
+            - "80:80"
+            - "8080:8080"
         volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
+            - /var/run/docker.sock:/var/run/docker.sock
         networks:
-          - wordpress
+            - wordpress
 
     wordpress:
         container_name: wordpress
         labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.wordpress.rule=Host(`cloud.mdesoeuv.com`)"
-          - "traefik.http.services.wordpress.loadbalancer.server.port=80"
+            - "traefik.enable=true"
+            - "traefik.http.routers.wordpress.rule=Host(`cloud.mdesoeuv.com`)"
+            - "traefik.http.services.wordpress.loadbalancer.server.port=80"
         working_dir: /var/www/html
         image: wordpress:latest
         #ports:
@@ -36,11 +38,11 @@ services:
             WORDPRESS_DB_USER: ${MYSQL_USER}
             WORDPRESS_DEBUG: 1
         healthcheck:
-          test: [ "CMD", "curl", "--fail", "http://localhost" ]
-          interval: 10s
-          timeout: 10s
-          retries: 3
-          start_period: 15s
+            test: [ "CMD", "curl", "--fail", "http://localhost" ]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 15s
         volumes:
             - wp_data:/var/www/html
         networks:
@@ -49,9 +51,9 @@ services:
     phpmyadmin:
         container_name: phpmyadmin
         labels:
-          - "traefik.enable=true"
-          - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.mdesoeuv.com`)"
-          - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
+            - "traefik.enable=true"
+            - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.mdesoeuv.com`)"
+            - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
         image: phpmyadmin/phpmyadmin
         #ports:
         #    - "8081:80"
@@ -70,7 +72,7 @@ services:
         image: wordpress:cli
         depends_on:
             wordpress:
-              condition: service_healthy
+                condition: service_healthy
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
             WORDPRESS_DB_HOST: ${DB_HOST}
@@ -78,10 +80,9 @@ services:
             WORDPRESS_TABLE_PREFIX: wp_
             WORDPRESS_DB_USER: ${MYSQL_USER}
         user: xfs
-        entrypoint: ["wp", "--allow-root"]
+        entrypoint: [ "wp", "--allow-root" ]
         command: >
-            core install --path="/var/www/html" --url=${WP_URL} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL};
-            wp --allow-root plugin install server-ip-memory-usage --activate
+            core install --path="/var/www/html" --url=${WP_URL} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}; wp --allow-root plugin install server-ip-memory-usage --activate
         volumes:
             - wp_data:/var/www/html
         networks:
@@ -93,7 +94,7 @@ services:
         image: wordpress:cli
         depends_on:
             wpcli:
-              condition: service_completed_successfully
+                condition: service_completed_successfully
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
             WORDPRESS_DB_HOST: ${DB_HOST}
@@ -101,7 +102,7 @@ services:
             WORDPRESS_TABLE_PREFIX: wp_
             WORDPRESS_DB_USER: ${MYSQL_USER}
         user: xfs
-        entrypoint: ["wp", "--allow-root"]
+        entrypoint: [ "wp", "--allow-root" ]
         command: >
             plugin install server-ip-memory-usage --activate
         volumes:
@@ -115,7 +116,7 @@ services:
         image: wordpress:cli
         depends_on:
             wpcli-plugin:
-              condition: service_completed_successfully
+                condition: service_completed_successfully
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
             WORDPRESS_DB_HOST: ${DB_HOST}
@@ -123,7 +124,7 @@ services:
             WORDPRESS_TABLE_PREFIX: wp_
             WORDPRESS_DB_USER: ${MYSQL_USER}
         user: xfs
-        entrypoint: ["wp", "--allow-root"]
+        entrypoint: [ "wp", "--allow-root" ]
         command: >
             plugin install classic-editor --activate
         volumes:
@@ -133,6 +134,7 @@ services:
 
 volumes:
     wp_data:
+
 
 networks:
     wordpress:
