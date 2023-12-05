@@ -9,6 +9,27 @@ data "aws_subnets" "default" {
   }
 }
 
+resource "aws_lb_target_group" "tg_phpmyadmin" {
+  name     = "${var.prefix}-${var.target_group_name}-${substr(uuid(), 0, 3)}"
+  port     = 8081 #port of phpmyadmin
+  protocol = "HTTP"
+  vpc_id   = data.aws_vpc.default.id
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [name]
+  }
+
+  # health check is docker up ?
+  # health_check {
+  #   enabled = true
+  #   path    = "/index.html"
+  #   port    = 8080
+  #   matcher = 200
+  # }
+}
+
+
 resource "aws_lb_target_group" "tg_wordpress" {
   name     = "${var.prefix}-${var.target_group_name}-${substr(uuid(), 0, 3)}"
   port     = 8080 #port of wordpress
@@ -27,8 +48,6 @@ resource "aws_lb_target_group" "tg_wordpress" {
   #   port    = 8080
   #   matcher = 200
   # }
-
-
 }
 
 resource "aws_security_group" "alb_sg" {
@@ -108,6 +127,25 @@ resource "aws_lb_listener" "redirect_https" {
   }
 }
 
+
+resource "aws_lb_listener_rule" "phpmyadmin" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 100
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_phpmyadmin.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/phpmyadmin/*"]
+    }
+  }
+}
+
+
+
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
   port              = "443"
@@ -119,4 +157,6 @@ resource "aws_lb_listener" "https" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tg_wordpress.arn
   }
+
 }
+
