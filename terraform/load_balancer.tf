@@ -11,7 +11,7 @@ data "aws_subnets" "default" {
 
 resource "aws_lb_target_group" "tg_traefik" {
   name     = "${var.prefix}-${var.target_group_name}-${substr(uuid(), 0, 3)}"
-  port     = 8080 #port of trafeik
+  port     = 80 #port of trafeik
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
 
@@ -23,7 +23,7 @@ resource "aws_lb_target_group" "tg_traefik" {
   health_check {
     enabled = true
     path    = "/"
-    port    = 8080
+    port    = 80
     matcher = "200,201,301,302"
   }
 

@@ -4,21 +4,18 @@ services:
     traefik:
         image: traefik:v2.3
         command:
-            - "--api.insecure=true"
+            #- "--api.insecure=true"
             - "--providers.docker=true"
             - "--providers.docker.exposedByDefault=false"
             - "--entrypoints.web.address=:80"
-            - "--log.level=DEBUG"
-            - "--api.dashboard=true"
-        labels:
-            - "entryPoints.web.forwardedHeaders.insecure"
-            - "entryPoints.web.proxyProtocol.insecure"
-            - "traefik.http.routers.traefik.rule=Host(`traefik.mdesoeuv.com`)"
-            - "traefik.http.routers.traefik.service=api@internal"
-            - "traefik.http.routers.traefik.entrypoints=websecure"
-        ports:
-            - "80:80"
-            - "8080:8080"
+            #- "--log.level=DEBUG"
+            #- "--api.dashboard=true"
+        #labels:
+        #    - "entryPoints.web.forwardedHeaders.insecure"
+        #    - "entryPoints.web.proxyProtocol.insecure"
+        #    - "traefik.http.routers.traefik.rule=Host(`traefik.mdesoeuv.com`)"
+        #    - "traefik.http.routers.traefik.service=api@internal"
+        #    - "traefik.http.routers.traefik.entrypoints=websecure"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
@@ -37,9 +34,6 @@ services:
 
         working_dir: /var/www/html
         image: wordpress:latest
-        #ports:
-        #  - 8080:80
-        #  - 3306:3306
         restart: always
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}

@@ -18,11 +18,6 @@ variable "target_group_name" {
   type    = string
 }
 
-variable "target_group_port" {
-  default = 8080
-  type    = number
-}
-
 variable "target_group_protocol" {
   default = "TCP"
   type    = string
@@ -78,7 +73,7 @@ variable "phpmyadmin_sub_domain_name" {
 
 variable "asg_desired_capacity" {
   description = "The number of Amazon EC2 instances that should be running in the group. (Changing this forces a new resource to be created.)"
-  default     = 2
+  default     = 1
 }
 
 variable "asg_max_size" {
@@ -88,5 +83,5 @@ variable "asg_max_size" {
 
 variable "asg_min_size" {
   description = "The minimum size of the auto scale group. (Changing this forces a new resource to be created.)"
-  default     = 2
+  default     = 1
 }
