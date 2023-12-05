@@ -34,10 +34,8 @@ services:
             - "8081:80"
         environment:
             PMA_HOST: ${DB_HOST}
-            PMA_USER: ${MYSQL_USER}
-            PMA_PASSWORD: ${MYSQL_PASSWORD}
-        depends_on:
-            - wordpress
+            #PMA_USER: ${MYSQL_USER}
+            #PMA_PASSWORD: ${MYSQL_PASSWORD}
         networks:
             - wordpress
 
@@ -57,9 +55,7 @@ services:
         user: xfs
         entrypoint: ["wp", "--allow-root"]
         command: >
-            core install --path="/var/www/html" --url=${WP_URL} --title=${WP_TITLE} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL};
-            wp --allow-root plugin install server-ip-memory-usage --activate
-        volumes:
+            core install --path="/var/www/html" --url=${WP_URL} --title=${WP_TITLE} --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}        volumes:
             - wp_data:/var/www/html
         networks:
             - wordpress
@@ -80,7 +76,7 @@ services:
         user: xfs
         entrypoint: ["wp", "--allow-root"]
         command: >
-            plugin install server-ip-memory-usage --activate
+            plugin install server-ip-memory-usage classic-editor --activate
         volumes:
             - wp_data:/var/www/html
         networks:
