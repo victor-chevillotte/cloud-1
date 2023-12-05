@@ -57,7 +57,7 @@ resource "aws_iam_server_certificate" "test_cert" {
 
 resource "aws_cloudfront_origin_request_policy" "example" {
   name    = "example-policy"
-  comment = "example comment"
+
   cookies_config {
     cookie_behavior = "all"
   }
@@ -74,11 +74,14 @@ resource "aws_cloudfront_origin_request_policy" "example" {
 
 resource "aws_cloudfront_cache_policy" "cloud1" {
   name    = "cloud1"
-  min_ttl = 0
+  
+  default_ttl = 10
+  max_ttl     = 20
+  min_ttl     = 1
 
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
-      cookie_behavior = "none"
+      cookie_behavior = "all"
     }
 
     headers_config {
