@@ -104,6 +104,15 @@ resource "aws_lb_target_group_attachment" "wordpress_attachment" {
   port             = 8080
 }
 
+resource "aws_lb_target_group_attachment" "phpmyadmin_attachment" {
+  depends_on       = [aws_instance.wordpress]
+  count            = length(aws_instance.wordpress)
+  target_group_arn = aws_lb_target_group.tg_phpmyadmin.arn
+  target_id        = aws_instance.wordpress[count.index].id
+  port             = 8081
+}
+
+
 resource "aws_lb_listener" "redirect_https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
   port              = "80"
