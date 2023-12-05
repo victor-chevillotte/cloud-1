@@ -1,7 +1,3 @@
-output "instances_ip" {
-  value = aws_autoscaling_group.wordpress_asg
-}
-
 output "cloudfront_domain_name" {
   value = aws_cloudfront_distribution.wordpress.domain_name
 }
