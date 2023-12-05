@@ -1,3 +1,6 @@
+auto scalling group
+rds replica standby
+
 ### Deployment Architecture
 
 The whole stack is deployed on AWS using the following services  
