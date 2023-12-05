@@ -64,14 +64,10 @@ services:
             - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
 
         image: phpmyadmin/phpmyadmin
-        #ports:
-        #    - "8081:80"
         restart: always
         environment:
             PMA_HOST: ${DB_HOST}
             PMA_ABSOLUTE_URI: "https://phpmyadmin.mdesoeuv.com"
-            #PMA_USER: ${MYSQL_USER}
-            #PMA_PASSWORD: ${MYSQL_PASSWORD}
         networks:
             - wordpress
 
