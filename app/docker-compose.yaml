@@ -4,18 +4,18 @@ services:
     traefik:
         image: traefik:v2.3
         command:
-            #- "--api.insecure=true"
+            # - "--api.insecure=true"
             - "--providers.docker=true"
             - "--providers.docker.exposedByDefault=false"
             - "--entrypoints.web.address=:80"
-            #- "--log.level=DEBUG"
-            #- "--api.dashboard=true"
-        #labels:
+            # - "--log.level=DEBUG"
+            # - "--api.dashboard=true"
+        # labels:
         #    - "entryPoints.web.forwardedHeaders.insecure"
         #    - "entryPoints.web.proxyProtocol.insecure"
-        #    - "traefik.http.routers.traefik.rule=Host(`traefik.mdesoeuv.com`)"
+        #    - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)"
         #    - "traefik.http.routers.traefik.service=api@internal"
-        #    - "traefik.http.routers.traefik.entrypoints=websecure"
+        #    - "traefik.http.routers.traefik.entrypoints=web"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
         networks:
@@ -25,11 +25,11 @@ services:
         container_name: wordpress
         labels:
             - "traefik.enable=true"
-            - "entryPoints.web.forwardedHeaders.insecure"
-            - "entryPoints.web.proxyProtocol.insecure"
-            - "traefik.http.routers.wordpress.rule=Host(`cloud.mdesoeuv.com`)"
+            # - "entryPoints.web.forwardedHeaders.insecure"
+            # - "entryPoints.web.proxyProtocol.insecure"
+            - "traefik.http.routers.wordpress.rule=Host(`${WORDPRESS_SUBDOMAIN}.${DOMAIN_NAME}`)"
             - "traefik.http.services.wordpress.loadbalancer.server.port=80"
-            - "traefik.http.routers.wordpress.entrypoints=websecure"
+            - "traefik.http.routers.wordpress.entrypoints=web"
 
 
         working_dir: /var/www/html
@@ -57,17 +57,17 @@ services:
         container_name: phpmyadmin
         labels:
             - "traefik.enable=true"
-            - "entryPoints.web.forwardedHeaders.insecure"
-            - "entryPoints.web.proxyProtocol.insecure"
-            - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.mdesoeuv.com`)"
+            # - "entryPoints.web.forwardedHeaders.insecure"
+            # - "entryPoints.web.proxyProtocol.insecure"
+            - "traefik.http.routers.phpmyadmin.rule=Host(`${PHPMYADMIN_SUBDOMAIN}.${DOMAIN_NAME}`)"
             - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
-            - "traefik.http.routers.phpmyadmin.entrypoints=websecure"
+            - "traefik.http.routers.phpmyadmin.entrypoints=web"
 
         image: phpmyadmin/phpmyadmin
         restart: always
         environment:
             PMA_HOST: ${DB_HOST}
-            PMA_ABSOLUTE_URI: "https://phpmyadmin.mdesoeuv.com"
+            PMA_ABSOLUTE_URI: "https://${PHPMYADMIN_SUBDOMAIN}.${DOMAIN_NAME}"
         networks:
             - wordpress
 

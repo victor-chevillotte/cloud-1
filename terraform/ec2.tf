@@ -25,11 +25,15 @@ data "cloudinit_config" "config" {
           permissions = "0644"
           owner       = "root:root"
           content = templatefile("${path.module}/../app/.env", {
-            WORDPRESS_URL = "${var.wordpress_sub_domain_name}.${var.domain_name}"
-            RDS_HOST      = aws_db_instance.cloud1.address
-            RDS_USER      = var.db_username
-            RDS_PASSWORD  = var.db_password
-            RDS_DB_NAME   = var.db_name
+            WORDPRESS_URL        = "${var.wordpress_sub_domain_name}.${var.domain_name}"
+            RDS_HOST             = aws_db_instance.cloud1.address
+            RDS_USER             = var.db_username
+            RDS_PASSWORD         = var.db_password
+            RDS_DB_NAME          = var.db_name
+            DOMAIN_NAME          = var.domain_name
+            TRAEFIK_SUBDOMAIN    = var.traefik_sub_domain_name
+            PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_name
+            WORDPRESS_SUBDOMAIN  = var.wordpress_sub_domain_name
           })
         }
       ]
