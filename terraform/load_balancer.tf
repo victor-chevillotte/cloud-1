@@ -9,9 +9,30 @@ data "aws_subnets" "default" {
   }
 }
 
-resource "aws_lb_target_group" "tg_traefik" {
+resource "aws_lb_target_group" "tg_wordpress" {
   name     = "${var.prefix}-${var.target_group_name}-${substr(uuid(), 0, 3)}"
-  port     = 80 #port of trafeik
+  port     = 8080 #port of wordpress
+  protocol = "HTTP"
+  vpc_id   = data.aws_vpc.default.id
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [name]
+  }
+
+  # health_check {
+  #   enabled = true
+  #   path    = "/"
+  #   port    = 80
+  #   matcher = "200,201,301,302"
+  # }
+
+}
+
+
+resource "aws_lb_target_group" "tg_phpmyadmin" {
+  name     = "${var.prefix}-phpmyadmin-${substr(uuid(), 0, 3)}"
+  port     = 8081 #port of phpmyadmin
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
 
@@ -77,7 +98,12 @@ resource "aws_lb" "alb_wordpress" {
 
 resource "aws_autoscaling_attachment" "wordpress_attachment" {
   autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
-  lb_target_group_arn    = aws_lb_target_group.tg_traefik.arn
+  lb_target_group_arn    = aws_lb_target_group.tg_wordpress.arn
+}
+
+resource "aws_autoscaling_attachment" "phpmyadmin_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
+  lb_target_group_arn    = aws_lb_target_group.tg_phpmyadmin.arn
 }
 
 resource "aws_lb_listener" "redirect_https" {
@@ -95,7 +121,21 @@ resource "aws_lb_listener" "redirect_https" {
   }
 }
 
+resource "aws_lb_listener_rule" "phpmyadmin" {
+  listener_arn = aws_lb_listener.https.arn
+  priority     = 100
 
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg_phpmyadmin.arn
+  }
+
+  condition {
+    host_header {
+      values = ["${var.phpmyadmin_sub_domain_name}.${var.domain_name}"]
+    }
+  }
+}
 
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
@@ -106,8 +146,7 @@ resource "aws_lb_listener" "https" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tg_traefik.arn
+    target_group_arn = aws_lb_target_group.tg_wordpress.arn
   }
-
 }
 

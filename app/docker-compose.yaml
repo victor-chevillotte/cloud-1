@@ -1,37 +1,10 @@
 version: "3.8"
 
 services:
-    traefik:
-        image: traefik:v2.3
-        command:
-            # - "--api.insecure=true"
-            - "--providers.docker=true"
-            - "--providers.docker.exposedByDefault=false"
-            - "--entrypoints.web.address=:80"
-            # - "--log.level=DEBUG"
-            # - "--api.dashboard=true"
-        # labels:
-        #    - "entryPoints.web.forwardedHeaders.insecure"
-        #    - "entryPoints.web.proxyProtocol.insecure"
-        #    - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_SUBDOMAIN}.${DOMAIN_NAME}`)"
-        #    - "traefik.http.routers.traefik.service=api@internal"
-        #    - "traefik.http.routers.traefik.entrypoints=web"
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        networks:
-            - wordpress
-
     wordpress:
         container_name: wordpress
-        labels:
-            - "traefik.enable=true"
-            # - "entryPoints.web.forwardedHeaders.insecure"
-            # - "entryPoints.web.proxyProtocol.insecure"
-            - "traefik.http.routers.wordpress.rule=Host(`${WORDPRESS_SUBDOMAIN}.${DOMAIN_NAME}`)"
-            - "traefik.http.services.wordpress.loadbalancer.server.port=80"
-            - "traefik.http.routers.wordpress.entrypoints=web"
-
-
+        ports:
+            - "8080:80"
         working_dir: /var/www/html
         image: wordpress:latest
         restart: always
@@ -55,14 +28,8 @@ services:
 
     phpmyadmin:
         container_name: phpmyadmin
-        labels:
-            - "traefik.enable=true"
-            # - "entryPoints.web.forwardedHeaders.insecure"
-            # - "entryPoints.web.proxyProtocol.insecure"
-            - "traefik.http.routers.phpmyadmin.rule=Host(`${PHPMYADMIN_SUBDOMAIN}.${DOMAIN_NAME}`)"
-            - "traefik.http.services.phpmyadmin.loadbalancer.server.port=80"
-            - "traefik.http.routers.phpmyadmin.entrypoints=web"
-
+        ports:
+            - "8081:80"
         image: phpmyadmin/phpmyadmin
         restart: always
         environment:
