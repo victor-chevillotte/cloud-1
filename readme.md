@@ -1,7 +1,3 @@
-TO DO :
-- [ ] 1 Target Group par Sous domaine
-- [ ] Conversion de la launch configuration en launch template
-
 ### Deployment Architecture
 
 The whole stack is deployed on AWS using the following services  
