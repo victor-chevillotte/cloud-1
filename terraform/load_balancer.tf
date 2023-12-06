@@ -20,12 +20,12 @@ resource "aws_lb_target_group" "tg_wordpress" {
     ignore_changes        = [name]
   }
 
-  # health_check {
-  #   enabled = true
-  #   path    = "/"
-  #   port    = 80
-  #   matcher = "200,201,301,302"
-  # }
+  health_check {
+    enabled = true
+    path    = "/"
+    port    = 8080
+    matcher = "200,201,301,302"
+  }
 
 }
 
@@ -44,7 +44,7 @@ resource "aws_lb_target_group" "tg_phpmyadmin" {
   health_check {
     enabled = true
     path    = "/"
-    port    = 80
+    port    = 8081
     matcher = "200,201,301,302"
   }
 
