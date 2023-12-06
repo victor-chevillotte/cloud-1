@@ -1,4 +1,6 @@
-test reboot auto des ec2 et docker
+TO DO :
+- [ ] 1 Target Group par Sous domaine
+- [ ] Conversion de la launch configuration en launch template
 
 ### Deployment Architecture
 
