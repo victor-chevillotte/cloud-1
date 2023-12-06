@@ -31,7 +31,6 @@ data "cloudinit_config" "config" {
             RDS_PASSWORD         = var.db_password
             RDS_DB_NAME          = var.db_name
             DOMAIN_NAME          = var.domain_name
-            TRAEFIK_SUBDOMAIN    = var.traefik_sub_domain_name
             PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_name
             WORDPRESS_SUBDOMAIN  = var.wordpress_sub_domain_name
           })

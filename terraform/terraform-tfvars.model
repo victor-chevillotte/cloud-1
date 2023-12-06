@@ -5,4 +5,3 @@ db_username      =
 db_password      = 
 instance_count             = 
 phpmyadmin_sub_domain_name = 
-traefik_sub_domain_name    =
