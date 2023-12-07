@@ -1,6 +1,6 @@
 To Do :
 
-- [ ] : Specify docker images versions
+- [-] : Specify docker images versions
 - [ ] : Test new articles are visible on 2 instances (with images)
 - [ ] : Retrain CloudFront cache to specific file types (.css, .jpg, etc...)
 - [ ] : Migrate Launch configuration to Launch Template

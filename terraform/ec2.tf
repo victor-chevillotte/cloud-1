@@ -42,7 +42,9 @@ data "cloudinit_config" "config" {
 
   part {
     content_type = "text/x-shellscript"
-    content      = file("${path.module}/config/userdata.sh")
+    content      = templatefile("${path.module}/config/userdata.sh", {
+      EFS_DNS = aws_efs_file_system.wordpress_efs.dns_name
+    })
   }
 }
 
@@ -77,6 +79,15 @@ resource "aws_security_group" "dev-ec2" {
   description = "rules for wordpress-ec2"
 
   ingress {
+    description = "EFS mount target"
+    from_port   = 2049
+    to_port     = 2049
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description      = "SSH Access"
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
@@ -93,6 +104,7 @@ resource "aws_security_group" "dev-ec2" {
   }
 
   ingress {
+    description      = "Worpress"
     from_port        = 8080
     to_port          = 8080
     protocol         = "tcp"
@@ -100,8 +112,8 @@ resource "aws_security_group" "dev-ec2" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  #PHPMyAdmin
   ingress {
+    description      = "PHPMyAdmin"
     from_port        = 8081
     to_port          = 8081
     protocol         = "tcp"
