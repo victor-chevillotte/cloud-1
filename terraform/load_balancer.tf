@@ -48,6 +48,9 @@ resource "aws_lb_target_group" "tg_phpmyadmin" {
 
   health_check {
     enabled = true
+    interval = 5
+    healthy_threshold = 2
+
     path    = "/"
     port    = 8081
     matcher = "200,201,301,302"
