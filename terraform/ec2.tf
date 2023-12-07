@@ -59,7 +59,7 @@ data "aws_ami" "linux" {
 
 
 resource "aws_key_pair" "ec2-key-pair" {
-  key_name   = "ec2-wordpress-key-pair"
+  key_name   = "ec2-${var.prefix}-key-pair"
   public_key = tls_private_key.rsa.public_key_openssh
 }
 
@@ -70,12 +70,12 @@ resource "tls_private_key" "rsa" {
 
 resource "local_file" "ec2-key" {
   content  = tls_private_key.rsa.private_key_pem
-  filename = "ec2-wordpress-key-pair"
+  filename = "ec2-${var.prefix}-key-pair"
 }
 
 resource "aws_security_group" "dev-ec2" {
   name        = "${var.prefix}-ec2-${var.target_group_name}"
-  description = "rules for wordpress-ec2"
+  description = "rules for ${var.prefix}-ec2"
 
   ingress {
     description = "EFS mount target"
@@ -138,26 +138,8 @@ resource "aws_security_group" "dev-ec2" {
 }
 
 
-# Launch Configuration
-# resource "aws_launch_configuration" "wordpress_lc" {
-#   depends_on    = [aws_db_instance.cloud1]
-#   name_prefix   = "wordpress-lc-"
-#   image_id      = data.aws_ami.linux.id
-#   instance_type = var.instance_type
-#   key_name      = aws_key_pair.ec2-key-pair.key_name
-
-#   security_groups = [aws_security_group.dev-ec2.id]
-
-#   user_data_base64            = data.cloudinit_config.config.rendered
-#   associate_public_ip_address = true
-
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
-
 resource "aws_launch_template" "wordpress_lt" {
-  name_prefix   = "wordpress-lt-"
+  name_prefix   = "${var.prefix}-lt-"
   image_id      = data.aws_ami.linux.id
   instance_type = var.instance_type
   key_name      = aws_key_pair.ec2-key-pair.key_name

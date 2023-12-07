@@ -56,7 +56,7 @@ resource "aws_iam_server_certificate" "cloud1_cert" {
 
 
 resource "aws_cloudfront_origin_request_policy" "cloud1" {
-  name = "example-policy"
+  name = "${var.prefix}-policy"
 
   cookies_config {
     cookie_behavior = "all"
@@ -73,7 +73,7 @@ resource "aws_cloudfront_origin_request_policy" "cloud1" {
 }
 
 resource "aws_cloudfront_cache_policy" "cloud1" {
-  name = "cloud1"
+  name = "${var.prefix}-cache-policy"
 
   default_ttl = 10
   max_ttl     = 20
