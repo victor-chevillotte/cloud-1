@@ -58,7 +58,6 @@ services:
             core install --path="/var/www/html" --url=${WP_URL} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}; wp --allow-root plugin install server-ip-memory-usage --activate
         volumes:
             - /home/ec2-user/data:/var/www/html
-            # - ./path/to/local/uploads:/var/www/html/wp-content/uploads
         networks:
             - wordpress
 
@@ -81,7 +80,6 @@ services:
             plugin install server-ip-memory-usage --activate
         volumes:
             - /home/ec2-user/data:/var/www/html
-            # - ./path/to/local/uploads:/var/www/html/wp-content/uploads
         networks:
             - wordpress
 
@@ -104,7 +102,6 @@ services:
             plugin install classic-editor --activate
         volumes:
             - /home/ec2-user/data:/var/www/html
-            # - ./path/to/local/uploads:/var/www/html/wp-content/uploads
         networks:
             - wordpress
 
