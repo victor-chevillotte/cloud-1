@@ -21,10 +21,13 @@ resource "aws_lb_target_group" "tg_wordpress" {
   }
 
   health_check {
-    enabled = true
-    path    = "/"
-    port    = 8080
-    matcher = "200,201,301,302"
+    enabled             = true
+    path                = "/"
+    port                = 8080
+    interval            = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    matcher             = "200,201,301,302"
   }
 
   stickiness {
@@ -47,13 +50,13 @@ resource "aws_lb_target_group" "tg_phpmyadmin" {
   }
 
   health_check {
-    enabled = true
-    interval = 5
-    healthy_threshold = 2
-
-    path    = "/"
-    port    = 8081
-    matcher = "200,201,301,302"
+    enabled             = true
+    interval            = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    path                = "/"
+    port                = 8081
+    matcher             = "200,201,301,302"
   }
 
 
