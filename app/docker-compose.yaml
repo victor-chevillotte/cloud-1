@@ -31,7 +31,7 @@ services:
         container_name: phpmyadmin
         ports:
             - "8081:80"
-        image: phpmyadmin/phpmyadmin:5.2
+        image: phpmyadmin/phpmyadmin
         restart: always
         environment:
             PMA_HOST: ${DB_HOST}

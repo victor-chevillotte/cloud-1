@@ -187,7 +187,7 @@ resource "aws_autoscaling_group" "wordpress_asg" {
 
   launch_template {
     id      = aws_launch_template.wordpress_lt.id
-    version = "$Latest"
+    version = aws_launch_template.wordpress_lt.latest_version
   }
   instance_refresh {
     strategy = "Rolling"
