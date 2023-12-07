@@ -9,6 +9,16 @@ data "aws_subnets" "default" {
   }
 }
 
+resource "aws_lb" "alb_wordpress" {
+  name               = "${var.prefix}-${var.alb_name}"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets            = data.aws_subnets.default.ids
+}
+
+
+
 resource "aws_lb_target_group" "tg_wordpress" {
   count    = var.instance_count
   name     = "${var.prefix}-${var.target_group_name}-${count.index}-${substr(uuid(), 0, 3)}"
@@ -109,15 +119,6 @@ resource "aws_security_group" "alb_sg" {
 }
 
 
-resource "aws_lb" "alb_wordpress" {
-  name               = "${var.prefix}-${var.alb_name}"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = data.aws_subnets.default.ids
-}
-
-
 resource "aws_lb_listener" "redirect_https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
   port              = "80"
@@ -136,7 +137,7 @@ resource "aws_lb_listener" "redirect_https" {
 resource "aws_lb_listener_rule" "wordpress" {
   count        = var.instance_count
   listener_arn = aws_lb_listener.https.arn
-  priority     = 100
+  priority     = 80 + count.index
 
   action {
     type             = "forward"
@@ -153,7 +154,7 @@ resource "aws_lb_listener_rule" "wordpress" {
 resource "aws_lb_listener_rule" "phpmyadmin" {
   count        = var.instance_count
   listener_arn = aws_lb_listener.https.arn
-  priority     = 100
+  priority     = 100 + count.index
 
   action {
     type             = "forward"
@@ -191,3 +192,9 @@ resource "aws_lb_listener" "https" {
 
 }
 
+resource "aws_lb_target_group_attachment" "wordpress" {
+  count           = var.instance_count
+  target_group_arn = aws_lb_target_group.tg_wordpress[count.index].arn
+  target_id        = aws_instance.wordpress[count.index].id
+  port             = 8080
+}
