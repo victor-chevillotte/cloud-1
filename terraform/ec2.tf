@@ -25,14 +25,14 @@ data "cloudinit_config" "config" {
           permissions = "0644"
           owner       = "root:root"
           content = templatefile("${path.module}/../app/.env", {
-            WORDPRESS_URL        = "${var.wordpress_sub_domain_name}.${var.domain_name}"
+            WORDPRESS_URL        = "${var.wordpress_sub_domain_list}.${var.domain_name}"
             RDS_HOST             = aws_db_instance.cloud1.address
             RDS_USER             = var.db_username
             RDS_PASSWORD         = var.db_password
             RDS_DB_NAME          = var.db_name
             DOMAIN_NAME          = var.domain_name
-            PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_name
-            WORDPRESS_SUBDOMAIN  = var.wordpress_sub_domain_name
+            PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_list
+            WORDPRESS_SUBDOMAIN  = var.wordpress_sub_domain_list
             EFSPATH              = aws_efs_file_system.wordpress_efs.id
           })
         }
@@ -42,7 +42,7 @@ data "cloudinit_config" "config" {
 
   part {
     content_type = "text/x-shellscript"
-    content      = templatefile("${path.module}/config/userdata.sh", {
+    content = templatefile("${path.module}/config/userdata.sh", {
       EFS_DNS = aws_efs_file_system.wordpress_efs.dns_name
     })
   }
@@ -175,21 +175,4 @@ resource "aws_launch_template" "wordpress_lt" {
   }
 
   depends_on = [aws_db_instance.cloud1]
-}
-
-
-
-resource "aws_autoscaling_group" "wordpress_asg" {
-  vpc_zone_identifier = data.aws_subnets.default.ids
-  desired_capacity    = var.asg_desired_capacity
-  max_size            = var.asg_max_size
-  min_size            = var.asg_min_size
-
-  launch_template {
-    id      = aws_launch_template.wordpress_lt.id
-    version = aws_launch_template.wordpress_lt.latest_version
-  }
-  instance_refresh {
-    strategy = "Rolling"
-  }
 }

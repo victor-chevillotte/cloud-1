@@ -59,25 +59,26 @@ variable "domain_name" {
   default     = "mdesoeuv.com"
 }
 
-variable "wordpress_sub_domain_name" {
+variable "wordpress_sub_domain_list" {
   description = "Wordpress Sub Domain Name"
 }
 
-variable "phpmyadmin_sub_domain_name" {
+variable "phpmyadmin_sub_domain_list" {
   description = "PhpMyAdmin Sub Domain Name"
 }
 
-variable "asg_desired_capacity" {
+variable "desired_instances" {
   description = "The number of Amazon EC2 instances that should be running in the group. (Changing this forces a new resource to be created.)"
-  default     = 2
+  default     = 3
 }
 
-variable "asg_max_size" {
-  description = "The maximum size of the auto scale group. (Changing this forces a new resource to be created.)"
-  default     = 4
+variable "wordpress_sub_domain_list" {
+  description = "Wordpress Sub Domain Name list"
+  type        = list(string)
+  default     = ["wp1", "wp2", "wp3"]
 }
-
-variable "asg_min_size" {
-  description = "The minimum size of the auto scale group. (Changing this forces a new resource to be created.)"
-  default     = 2
+variable "phpmyadmin_sub_domain_list" {
+  description = "PhpMyAdmin Sub Domain Name list"
+  type        = list(string)
+  default     = ["pma1", "pma2", "pma3"]
 }
