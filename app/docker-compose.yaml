@@ -1,12 +1,13 @@
 version: "3.8"
 
+
 services:
     wordpress:
         container_name: wordpress
         ports:
             - "8080:80"
         working_dir: /var/www/html
-        image: wordpress:latest
+        image: wordpress:6.4.2
         restart: always
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
@@ -30,7 +31,7 @@ services:
         container_name: phpmyadmin
         ports:
             - "8081:80"
-        image: phpmyadmin/phpmyadmin
+        image: phpmyadmin/phpmyadmin:5.2
         restart: always
         environment:
             PMA_HOST: ${DB_HOST}
@@ -41,7 +42,7 @@ services:
     wpcli:
         container_name: wpcli
         working_dir: /var/www/html
-        image: wordpress:cli
+        image: wordpress:cli-2.9
         depends_on:
             wordpress:
                 condition: service_healthy
