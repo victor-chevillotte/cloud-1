@@ -7,7 +7,7 @@ services:
         ports:
             - "8080:80"
         working_dir: /var/www/html
-        image: wordpress:6.4.2
+        image: wordpress:6.4
         restart: always
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
@@ -18,10 +18,10 @@ services:
             WORDPRESS_DEBUG: 1
         healthcheck:
             test: [ "CMD", "curl", "--fail", "http://localhost" ]
-            interval: 10s
+            interval: 30s
             timeout: 10s
             retries: 3
-            start_period: 15s
+            start_period: 20s
         volumes:
             - wp_data:/var/www/html
         networks:
