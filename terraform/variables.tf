@@ -69,7 +69,7 @@ variable "phpmyadmin_sub_domain_name" {
 
 variable "asg_desired_capacity" {
   description = "The number of Amazon EC2 instances that should be running in the group. (Changing this forces a new resource to be created.)"
-  default     = 1
+  default     = 2
 }
 
 variable "asg_max_size" {

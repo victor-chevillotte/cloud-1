@@ -127,28 +127,56 @@ resource "aws_security_group" "dev-ec2" {
 
 
 # Launch Configuration
-resource "aws_launch_configuration" "wordpress_lc" {
-  depends_on    = [aws_db_instance.cloud1]
-  name_prefix   = "wordpress-lc-"
+# resource "aws_launch_configuration" "wordpress_lc" {
+#   depends_on    = [aws_db_instance.cloud1]
+#   name_prefix   = "wordpress-lc-"
+#   image_id      = data.aws_ami.linux.id
+#   instance_type = var.instance_type
+#   key_name      = aws_key_pair.ec2-key-pair.key_name
+
+#   security_groups = [aws_security_group.dev-ec2.id]
+
+#   user_data_base64            = data.cloudinit_config.config.rendered
+#   associate_public_ip_address = true
+
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
+
+resource "aws_launch_template" "wordpress_lt" {
+  name_prefix   = "wordpress-lt-"
   image_id      = data.aws_ami.linux.id
   instance_type = var.instance_type
   key_name      = aws_key_pair.ec2-key-pair.key_name
 
-  security_groups = [aws_security_group.dev-ec2.id]
+  user_data = base64encode(data.cloudinit_config.config.rendered)
 
-  user_data_base64            = data.cloudinit_config.config.rendered
-  associate_public_ip_address = true
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.dev-ec2.id]
+  }
 
   lifecycle {
     create_before_destroy = true
   }
+
+  depends_on = [aws_db_instance.cloud1]
 }
 
-# Auto Scaling Group
+
+
 resource "aws_autoscaling_group" "wordpress_asg" {
-  desired_capacity     = var.asg_desired_capacity
-  max_size             = var.asg_max_size
-  min_size             = var.asg_min_size
-  vpc_zone_identifier  = data.aws_subnets.default.ids
-  launch_configuration = aws_launch_configuration.wordpress_lc.id
+  vpc_zone_identifier = data.aws_subnets.default.ids
+  desired_capacity    = var.asg_desired_capacity
+  max_size            = var.asg_max_size
+  min_size            = var.asg_min_size
+
+  launch_template {
+    id      = aws_launch_template.wordpress_lt.id
+    version = "$Latest"
+  }
+  instance_refresh {
+    strategy = "Rolling"
+  }
 }
