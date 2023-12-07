@@ -27,6 +27,7 @@ resource "aws_lb_target_group" "tg_wordpress" {
     interval            = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
+    timeout             = 4
     matcher             = "200,201,301,302"
   }
 
@@ -56,6 +57,7 @@ resource "aws_lb_target_group" "tg_phpmyadmin" {
     unhealthy_threshold = 2
     path                = "/"
     port                = 8081
+    timeout             = 4
     matcher             = "200,201,301,302"
   }
 
