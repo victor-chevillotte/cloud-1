@@ -79,5 +79,5 @@ variable "asg_max_size" {
 
 variable "asg_min_size" {
   description = "The minimum size of the auto scale group. (Changing this forces a new resource to be created.)"
-  default     = 1
+  default     = 2
 }

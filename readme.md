@@ -1,3 +1,10 @@
+To Do :
+
+- [ ] : Specify docker images versions
+- [ ] : Test new articles are visible on 2 instances (with images)
+- [ ] : Retrain CloudFront cache to specific file types (.css, .jpg, etc...)
+- [ ] : Migrate Launch configuration to Launch Template
+
 ### Deployment Architecture
 
 The whole stack is deployed on AWS using the following services  
