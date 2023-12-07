@@ -33,6 +33,7 @@ data "cloudinit_config" "config" {
             DOMAIN_NAME          = var.domain_name
             PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_name
             WORDPRESS_SUBDOMAIN  = var.wordpress_sub_domain_name
+            EFSPATH              = aws_efs_file_system.wordpress_efs.id
           })
         }
       ]
