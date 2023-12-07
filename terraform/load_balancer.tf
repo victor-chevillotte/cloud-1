@@ -198,3 +198,11 @@ resource "aws_lb_target_group_attachment" "wordpress" {
   target_id        = aws_instance.wordpress[count.index].id
   port             = 8080
 }
+
+
+resource "aws_lb_target_group_attachment" "phpmyadmin" {
+  count           = var.instance_count
+  target_group_arn = aws_lb_target_group.tg_phpmyadmin[count.index].arn
+  target_id        = aws_instance.wordpress[count.index].id
+  port             = 8081
+}
