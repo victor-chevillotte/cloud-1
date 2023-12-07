@@ -193,7 +193,7 @@ resource "aws_lb_listener" "https" {
 }
 
 resource "aws_lb_target_group_attachment" "wordpress" {
-  count           = var.instance_count
+  count            = var.instance_count
   target_group_arn = aws_lb_target_group.tg_wordpress[count.index].arn
   target_id        = aws_instance.wordpress[count.index].id
   port             = 8080
@@ -201,7 +201,7 @@ resource "aws_lb_target_group_attachment" "wordpress" {
 
 
 resource "aws_lb_target_group_attachment" "phpmyadmin" {
-  count           = var.instance_count
+  count            = var.instance_count
   target_group_arn = aws_lb_target_group.tg_phpmyadmin[count.index].arn
   target_id        = aws_instance.wordpress[count.index].id
   port             = 8081
