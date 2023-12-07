@@ -1,6 +1,9 @@
 resource "aws_cloudfront_distribution" "cloud1" {
   provider = aws.us-east-1
-  aliases  = ["${var.wordpress_sub_domain_list}.${var.domain_name}", "${var.phpmyadmin_sub_domain_list}.${var.domain_name}"]
+  aliases = concat(
+    [for subdomain in var.wordpress_sub_domain_list : "${subdomain}.${var.domain_name}"],
+    [for subdomain in var.phpmyadmin_sub_domain_list : "${subdomain}.${var.domain_name}"]
+  )
   origin {
     domain_name = aws_lb.alb_wordpress.dns_name
     origin_id   = aws_lb.alb_wordpress.id

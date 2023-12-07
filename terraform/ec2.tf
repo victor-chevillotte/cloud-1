@@ -1,6 +1,8 @@
 
 
+
 data "cloudinit_config" "config" {
+  count         = var.instance_count
   gzip          = true
   base64_encode = true
 
@@ -25,15 +27,13 @@ data "cloudinit_config" "config" {
           permissions = "0644"
           owner       = "root:root"
           content = templatefile("${path.module}/../app/.env", {
-            WORDPRESS_URL        = "${var.wordpress_sub_domain_list}.${var.domain_name}"
-            RDS_HOST             = aws_db_instance.cloud1.address
-            RDS_USER             = var.db_username
-            RDS_PASSWORD         = var.db_password
-            RDS_DB_NAME          = var.db_name
-            DOMAIN_NAME          = var.domain_name
-            PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_list
-            WORDPRESS_SUBDOMAIN  = var.wordpress_sub_domain_list
-            EFSPATH              = aws_efs_file_system.wordpress_efs.id
+            WORDPRESS_SUBDOMAIN = var.wordpress_sub_domain_list[count.index]
+            RDS_HOST      = aws_db_instance.cloud1.address
+            DOMAIN_NAME   = var.domain_name
+            RDS_USER      = var.db_username
+            RDS_PASSWORD  = var.db_password
+            RDS_DB_NAME   = var.db_name
+            PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_list[count.index]
           })
         }
       ]
@@ -42,9 +42,7 @@ data "cloudinit_config" "config" {
 
   part {
     content_type = "text/x-shellscript"
-    content = templatefile("${path.module}/config/userdata.sh", {
-      EFS_DNS = aws_efs_file_system.wordpress_efs.dns_name
-    })
+    content      = file("${path.module}/config/userdata.sh")
   }
 }
 
@@ -58,6 +56,19 @@ data "aws_ami" "linux" {
   }
 }
 
+resource "aws_instance" "wordpress" {
+  count                       = var.instance_count
+  ami                         = data.aws_ami.linux.id
+  instance_type               = var.instance_type
+  associate_public_ip_address = true
+  key_name                    = aws_key_pair.ec2-key-pair.key_name
+  user_data_base64            = data.cloudinit_config.config[count.index].rendered
+  user_data_replace_on_change = true
+  security_groups             = [aws_security_group.dev-ec2.name]
+  tags = {
+    Name = "wordpress Instance"
+  }
+}
 
 resource "aws_key_pair" "ec2-key-pair" {
   key_name   = "ec2-wordpress-key-pair"
@@ -138,41 +149,3 @@ resource "aws_security_group" "dev-ec2" {
   }
 }
 
-
-# Launch Configuration
-# resource "aws_launch_configuration" "wordpress_lc" {
-#   depends_on    = [aws_db_instance.cloud1]
-#   name_prefix   = "wordpress-lc-"
-#   image_id      = data.aws_ami.linux.id
-#   instance_type = var.instance_type
-#   key_name      = aws_key_pair.ec2-key-pair.key_name
-
-#   security_groups = [aws_security_group.dev-ec2.id]
-
-#   user_data_base64            = data.cloudinit_config.config.rendered
-#   associate_public_ip_address = true
-
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
-
-resource "aws_launch_template" "wordpress_lt" {
-  name_prefix   = "wordpress-lt-"
-  image_id      = data.aws_ami.linux.id
-  instance_type = var.instance_type
-  key_name      = aws_key_pair.ec2-key-pair.key_name
-
-  user_data = base64encode(data.cloudinit_config.config.rendered)
-
-  network_interfaces {
-    associate_public_ip_address = true
-    security_groups             = [aws_security_group.dev-ec2.id]
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  depends_on = [aws_db_instance.cloud1]
-}

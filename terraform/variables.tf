@@ -35,6 +35,7 @@ variable "alb_name" {
 
 variable "instance_count" {
   type = number
+  description = "Number of instances to create (Max 5)"
 }
 
 variable "db_name" {
@@ -60,25 +61,12 @@ variable "domain_name" {
 }
 
 variable "wordpress_sub_domain_list" {
-  description = "Wordpress Sub Domain Name"
-}
-
-variable "phpmyadmin_sub_domain_list" {
-  description = "PhpMyAdmin Sub Domain Name"
-}
-
-variable "desired_instances" {
-  description = "The number of Amazon EC2 instances that should be running in the group. (Changing this forces a new resource to be created.)"
-  default     = 3
-}
-
-variable "wordpress_sub_domain_list" {
   description = "Wordpress Sub Domain Name list"
   type        = list(string)
-  default     = ["wp1", "wp2", "wp3"]
+  default     = ["wp1", "wp2", "wp3", "wp4", "wp5"]
 }
 variable "phpmyadmin_sub_domain_list" {
   description = "PhpMyAdmin Sub Domain Name list"
   type        = list(string)
-  default     = ["pma1", "pma2", "pma3"]
+  default     = ["pma1", "pma2", "pma3", "pma4", "pma5"]
 }
