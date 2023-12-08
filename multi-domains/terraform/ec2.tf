@@ -28,7 +28,7 @@ data "cloudinit_config" "config" {
           owner       = "root:root"
           content = templatefile("${path.module}/../app/.env", {
             WORDPRESS_SUBDOMAIN = var.wordpress_sub_domain_list[count.index]
-            RDS_HOST      = aws_db_instance.cloud1.address
+            RDS_HOST      = aws_db_instance.cloud1[count.index].address
             DOMAIN_NAME   = var.domain_name
             RDS_USER      = var.db_username
             RDS_PASSWORD  = var.db_password
