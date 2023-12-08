@@ -32,16 +32,13 @@ resource "aws_cloudfront_distribution" "cloud1" {
 
   # Cache behavior with precedence 0
   ordered_cache_behavior {
-    path_pattern     = "/wp-content/uploads/*"
+    path_pattern     = "/wp-content/*"
     target_origin_id = aws_lb.alb_wordpress.id
     allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
     viewer_protocol_policy   = "redirect-to-https"
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managed-allviewer.id
-    cache_policy_id = aws_cloudfront_cache_policy.cloud1.id
-    default_ttl = 30
-    max_ttl     = 60
-    min_ttl     = 1
+    cache_policy_id = aws_cloudfront_cache_policy.static.id
   }
 
   restrictions {
@@ -96,20 +93,50 @@ data "aws_cloudfront_origin_request_policy" "managed-allviewer" {
 resource "aws_cloudfront_cache_policy" "cloud1" {
   name = "${var.prefix}-cache-policy"
 
-  default_ttl = 30
-  max_ttl     = 60
-  min_ttl     = 10
+  default_ttl = 0
+  max_ttl     = 0
+  min_ttl     = 0
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "whitelist"
+      cookies {
+        items = ["AWSALB"]
+      }
+    }
+
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["Host", "Origin"]
+      }
+    }
+
+    query_strings_config {
+      query_string_behavior = "all"
+    }
+  }
+}
+
+resource "aws_cloudfront_cache_policy" "static" {
+  name = "${var.prefix}-cache-policy"
+
+  default_ttl = 60
+  max_ttl     = 120
+  min_ttl     = 30
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
       cookie_behavior = "none"
     }
 
     headers_config {
-      header_behavior = "none"
+      header_behavior = "whitelist"
+      headers {
+        items = ["Host", "Origin"]
+      }
     }
 
     query_strings_config {
-      query_string_behavior = "all"
+      query_string_behavior = "none"
     }
   }
 }
