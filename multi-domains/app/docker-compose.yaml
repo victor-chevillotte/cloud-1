@@ -1,0 +1,110 @@
+version: "3.8"
+
+
+services:
+    wordpress:
+        container_name: wordpress
+        ports:
+            - "8080:80"
+        working_dir: /var/www/html
+        image: wordpress:6.4
+        restart: always
+        environment:
+            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+            WORDPRESS_DB_HOST: ${DB_HOST}
+            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+            WORDPRESS_TABLE_PREFIX: ${WP_TABLE_PREFIX}
+            WORDPRESS_DB_USER: ${MYSQL_USER}
+            WORDPRESS_DEBUG: 1
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "http://localhost" ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 20s
+        volumes:
+            - /home/ec2-user/data:/var/www/html
+        networks:
+            - wordpress
+
+    phpmyadmin:
+        container_name: phpmyadmin
+        ports:
+            - "8081:80"
+        image: phpmyadmin/phpmyadmin
+        restart: always
+        environment:
+            PMA_HOST: ${DB_HOST}
+            PMA_ABSOLUTE_URI: "https://${PHPMYADMIN_SUBDOMAIN}.${DOMAIN_NAME}"
+        networks:
+            - wordpress
+
+    wpcli:
+        container_name: wpcli
+        working_dir: /var/www/html
+        image: wordpress:cli-2.9
+        depends_on:
+            wordpress:
+                condition: service_healthy
+        environment:
+            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+            WORDPRESS_DB_HOST: ${DB_HOST}
+            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+            WORDPRESS_TABLE_PREFIX: wp_
+            WORDPRESS_DB_USER: ${MYSQL_USER}
+        user: xfs
+        entrypoint: [ "wp", "--allow-root" ]
+        command: >
+            core install --path="/var/www/html" --url=${WP_URL} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}; wp --allow-root plugin install server-ip-memory-usage --activate
+        volumes:
+            - /home/ec2-user/data:/var/www/html
+        networks:
+            - wordpress
+
+    wpcli-plugin:
+        container_name: wpcli-plugin
+        working_dir: /var/www/html
+        image: wordpress:cli
+        depends_on:
+            wpcli:
+                condition: service_completed_successfully
+        environment:
+            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+            WORDPRESS_DB_HOST: ${DB_HOST}
+            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+            WORDPRESS_TABLE_PREFIX: wp_
+            WORDPRESS_DB_USER: ${MYSQL_USER}
+        user: xfs
+        entrypoint: [ "wp", "--allow-root" ]
+        command: >
+            plugin install server-ip-memory-usage --activate
+        volumes:
+            - /home/ec2-user/data:/var/www/html
+        networks:
+            - wordpress
+
+    wpcli-plugin-2:
+        container_name: wpcli-plugin-2
+        working_dir: /var/www/html
+        image: wordpress:cli
+        depends_on:
+            wpcli-plugin:
+                condition: service_completed_successfully
+        environment:
+            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+            WORDPRESS_DB_HOST: ${DB_HOST}
+            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+            WORDPRESS_TABLE_PREFIX: wp_
+            WORDPRESS_DB_USER: ${MYSQL_USER}
+        user: xfs
+        entrypoint: [ "wp", "--allow-root" ]
+        command: >
+            plugin install classic-editor --activate
+        volumes:
+            - /home/ec2-user/data:/var/www/html
+        networks:
+            - wordpress
+
+
+networks:
+    wordpress:

@@ -1,0 +1,13 @@
+[Unit]
+Description=wordpress docker compose stack
+After=docker.service network-online.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/local/bin/docker-compose -f /home/ec2-user/docker-compose.yaml up 
+
+[Install]
+WantedBy=multi-user.target
