@@ -99,9 +99,6 @@ terraform/.terraform.lock.hcl
 app/.env
 terraform/ec2-wordpress-key-pair
 terraform/ec2-key-pair
+terraform/ec2-c1-key-pair
 
-terraform/mdesoeuv.com_private_key.key
-terraform/ssl
-terraform/ssl/mdesoeuv.com_private_key.key
-terraform/ssl/mdesoeuv.com_ssl_certificate_INTERMEDIATE.cer
-terraform/ssl/mdesoeuv.com_ssl_certificate.cer
+terraform/ssl/*
