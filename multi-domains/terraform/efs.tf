@@ -23,7 +23,7 @@ resource "aws_security_group" "efs" {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = [aws_security_group.dev-ec2.id]
+    security_groups = [aws_security_group.dev-ec2.id]
   }
 
   egress {
