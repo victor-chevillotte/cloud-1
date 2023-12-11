@@ -89,14 +89,7 @@ resource "aws_security_group" "dev-ec2" {
   name        = "${var.prefix}-ec2-${var.target_group_name}"
   description = "rules for wordpress-ec2"
 
-  ingress {
-    description = "EFS mount target"
-    from_port   = 2049
-    to_port     = 2049
-    protocol    = "tcp"
-        security_groups      = [aws_security_group.efs.id]
 
-  }
 
   ingress {
     description      = "SSH Access"
