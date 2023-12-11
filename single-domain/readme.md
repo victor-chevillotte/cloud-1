@@ -1,12 +1,3 @@
-To Do :
-
-- [-] : Test new articles are visible on 2 instances (with images)
-- [ ] : Retrain CloudFront cache to specific file types (.css, .jpg, etc...) Mehdi
-- [-] : Migrate Launch configuration to Launch Template
-- [-] : new branch with alb Victor
-- [ ] : Readme Mehdi
-- [-] : Faire 2 sous dossiers Victor
-
 ### Deployment Architecture
 
 The whole stack is deployed on AWS using the following services  
