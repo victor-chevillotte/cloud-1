@@ -137,6 +137,8 @@ resource "aws_autoscaling_group" "wordpress_asg" {
   max_size            = var.asg_max_size
   min_size            = var.asg_min_size
 
+  health_check_type = "ELB"
+
   launch_template {
     id      = aws_launch_template.wordpress_lt.id
     version = aws_launch_template.wordpress_lt.latest_version

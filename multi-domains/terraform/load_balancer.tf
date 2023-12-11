@@ -33,13 +33,13 @@ resource "aws_lb_target_group" "tg_wordpress" {
 
   health_check {
     enabled             = true
-    path                = "/"
+    path                = "/wp-admin/images/wordpress-logo.svg"
     port                = 8080
-    interval            = 5
+    interval            = 25
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 4
-    matcher             = "200,201,301,302"
+    matcher             = "200,201"
   }
 
   stickiness {
@@ -64,7 +64,7 @@ resource "aws_lb_target_group" "tg_phpmyadmin" {
 
   health_check {
     enabled             = true
-    interval            = 5
+    interval            = 25
     healthy_threshold   = 2
     unhealthy_threshold = 2
     path                = "/"
