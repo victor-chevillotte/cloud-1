@@ -102,3 +102,4 @@ terraform/ec2-key-pair
 terraform/ec2-c1-key-pair
 
 terraform/ssl/*
+!terraform/ssl/.gitkeep
