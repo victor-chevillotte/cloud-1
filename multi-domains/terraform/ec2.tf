@@ -110,7 +110,7 @@ resource "aws_security_group" "dev-ec2" {
     from_port        = 8080
     to_port          = 8080
     protocol         = "tcp"
-    cidr_blocks      = [aws_security_group.dev-ec2.id]
+    cidr_blocks      = [aws_security_group.alb_sg.id]
   }
 
   ingress {
@@ -118,9 +118,9 @@ resource "aws_security_group" "dev-ec2" {
     from_port        = 8081
     to_port          = 8081
     protocol         = "tcp"
-    cidr_blocks      = [aws_security_group.dev-ec2.id]
+    cidr_blocks      = [aws_security_group.alb_sg.id]
   }
-  
+
   egress {
     from_port        = 0
     to_port          = 0
