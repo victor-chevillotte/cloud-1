@@ -1,7 +1,7 @@
 ionoscloud_token =
 wordpress_sub_domain_name  =
+phpmyadmin_sub_domain_name = 
 db_name          = 
 db_username      = 
 db_password      = 
-instance_count             = 
-phpmyadmin_sub_domain_name = 
+instance_count   = 
