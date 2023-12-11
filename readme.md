@@ -10,6 +10,6 @@ This infrastructure defines endpoints (From 1 to 5 endpoints). Each of these end
 To Do :
 
 - [ ] : Retrain CloudFront cache to specific file types (.css, .jpg, etc...) Mehdi
-- [ ] : Readme multi domains
+- [-] : Readme multi domains
 - [ ] : Ingress sg wordpress
 - [ ] : Health Check
