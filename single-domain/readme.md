@@ -83,6 +83,3 @@ The traffic is forwarded to the CloudFront origin set as the Load Balancer (incl
 - Run `terraform plan` and `terraform apply` to deploy the infrastructure
 - Run `terraform destroy` to destroy the infrastructure
 - The EC2 SSH Key permissions must be changed to `400` 
-
-
-
