@@ -91,34 +91,28 @@ data "aws_cloudfront_origin_request_policy" "managed-allviewer" {
 
 
 resource "aws_cloudfront_cache_policy" "cloud1" {
-  name = "${var.prefix}-cache-policy"
+  name = "${var.prefix}-dynamic-cache-policy"
 
   default_ttl = 0
   max_ttl     = 0
   min_ttl     = 0
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
-      cookie_behavior = "whitelist"
-      cookies {
-        items = ["AWSALB"]
-      }
+      cookie_behavior = "none"
     }
 
     headers_config {
-      header_behavior = "whitelist"
-      headers {
-        items = ["Host", "Origin"]
-      }
+      header_behavior = "none"
     }
 
     query_strings_config {
-      query_string_behavior = "all"
+      query_string_behavior = "none"
     }
   }
 }
 
 resource "aws_cloudfront_cache_policy" "static" {
-  name = "${var.prefix}-cache-policy"
+  name = "${var.prefix}-static-cache-policy"
 
   default_ttl = 60
   max_ttl     = 120
@@ -136,7 +130,7 @@ resource "aws_cloudfront_cache_policy" "static" {
     }
 
     query_strings_config {
-      query_string_behavior = "none"
+      query_string_behavior = "all"
     }
   }
 }
