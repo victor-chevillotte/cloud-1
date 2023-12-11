@@ -11,5 +11,5 @@ To Do :
 
 - [ ] : Retrain CloudFront cache to specific file types (.css, .jpg, etc...) Mehdi
 - [-] : Readme multi domains
-- [ ] : Ingress sg wordpress
+- [-] : Ingress sg wordpress
 - [ ] : Health Check
