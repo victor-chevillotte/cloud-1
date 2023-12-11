@@ -94,7 +94,8 @@ resource "aws_security_group" "dev-ec2" {
     from_port   = 2049
     to_port     = 2049
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+        security_groups      = [aws_security_group.efs.id]
+
   }
 
   ingress {
