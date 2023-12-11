@@ -56,30 +56,7 @@ services:
         user: xfs
         entrypoint: [ "wp", "--allow-root" ]
         command: >
-            core multisite-install --subdomains --path="/var/www/html" --url=https://${DOMAIN_NAME} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}; wp --allow-root plugin install server-ip-memory-usage --activate
-        volumes:
-            - /home/ec2-user/data:/var/www/html
-        networks:
-            - wordpress
-
-    wpcli-subdomain:
-        container_name: wpcli-subdomain
-        working_dir: /var/www/html
-        image: wordpress:cli-2.9
-        depends_on:
-            wpcli:
-                condition: service_completed_successfully
-        environment:
-            WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-            WORDPRESS_DB_HOST: ${DB_HOST}
-            WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-            WORDPRESS_TABLE_PREFIX: wp_
-            WORDPRESS_DB_USER: ${MYSQL_USER}
-
-        user: xfs
-        entrypoint: [ "wp", "--allow-root" ]
-        command: >
-            site create --slug=${SUBDOMAIN} --title="${WP_TITLE}" 
+            core install --path="/var/www/html" --url=https://${WP_URL} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}; wp --allow-root plugin install server-ip-memory-usage --activate
         volumes:
             - /home/ec2-user/data:/var/www/html
         networks:
@@ -90,7 +67,7 @@ services:
         working_dir: /var/www/html
         image: wordpress:cli
         depends_on:
-            wpcli-subdomain:
+            wpcli:
                 condition: service_completed_successfully
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
