@@ -89,8 +89,6 @@ resource "aws_security_group" "dev-ec2" {
   name        = "${var.prefix}-ec2-${var.target_group_name}"
   description = "rules for wordpress-ec2"
 
-
-
   ingress {
     description      = "SSH Access"
     from_port        = 22

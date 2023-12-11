@@ -77,14 +77,6 @@ resource "aws_security_group" "dev-ec2" {
   description = "rules for ${var.prefix}-ec2"
 
   ingress {
-    description = "EFS mount target"
-    from_port   = 2049
-    to_port     = 2049
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
     description      = "SSH Access"
     from_port        = 22
     to_port          = 22
