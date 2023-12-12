@@ -23,7 +23,9 @@ services:
             retries: 3
             start_period: 20s
         volumes:
-            - /home/ec2-user/data:/var/www/html
+            - wp_data:/var/www/html
+            - /home/ec2-user/data:/var/www/html/wp-content
+
         networks:
             - wordpress
 
@@ -57,7 +59,7 @@ services:
         command: >
             core install --path="/var/www/html" --url=${WP_URL} --title="${WP_TITLE}" --admin_user=${WP_ADMIN_USER} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}
         volumes:
-            - /home/ec2-user/data:/var/www/html
+            - wp_data:/var/www/html
         networks:
             - wordpress
 
@@ -79,7 +81,7 @@ services:
         command: >
             plugin install server-ip-memory-usage --activate
         volumes:
-            - /home/ec2-user/data:/var/www/html
+            - wp_data:/var/www/html
         networks:
             - wordpress
 
@@ -101,10 +103,12 @@ services:
         command: >
             plugin install classic-editor --activate
         volumes:
-            - /home/ec2-user/data:/var/www/html
+            - wp_data:/var/www/html
         networks:
             - wordpress
 
+volumes:
+    wp_data:
 
 networks:
     wordpress:
