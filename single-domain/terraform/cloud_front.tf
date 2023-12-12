@@ -26,7 +26,7 @@ resource "aws_cloudfront_distribution" "cloud1" {
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
     viewer_protocol_policy   = "redirect-to-https"
-    origin_request_policy_id = aws_cloudfront_origin_request_policy.cloud1.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managed-allviewer.id
 
   }
 
