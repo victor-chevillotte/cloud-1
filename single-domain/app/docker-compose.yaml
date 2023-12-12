@@ -64,7 +64,7 @@ services:
     wpcli-plugin:
         container_name: wpcli-plugin
         working_dir: /var/www/html
-        image: wordpress:cli
+        image: wordpress:cli-2.9
         depends_on:
             wpcli:
                 condition: service_completed_successfully
@@ -86,7 +86,7 @@ services:
     wpcli-plugin-2:
         container_name: wpcli-plugin-2
         working_dir: /var/www/html
-        image: wordpress:cli
+        image: wordpress:cli-2.9
         depends_on:
             wpcli-plugin:
                 condition: service_completed_successfully
@@ -104,7 +104,16 @@ services:
             - /home/ec2-user/data:/var/www/html
         networks:
             - wordpress
-
+    
+    bash:
+        container_name: bash
+        image: bash:4.4
+        depends_on:
+            wpcli-plugin-2:
+                condition: service_completed_successfully
+        command: ["bash", "-c", "chmod -R 755 /data"]
+        volumes: 
+            - /home/ec2-user/data:/data
 
 networks:
     wordpress:
