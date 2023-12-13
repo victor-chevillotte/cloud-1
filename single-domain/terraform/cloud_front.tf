@@ -15,7 +15,6 @@ resource "aws_cloudfront_distribution" "cloud1" {
 
 
   enabled         = true
-  is_ipv6_enabled = true
 
   default_cache_behavior {
     cache_policy_id  = aws_cloudfront_cache_policy.cloud1.id
@@ -37,7 +36,7 @@ resource "aws_cloudfront_distribution" "cloud1" {
     allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
     viewer_protocol_policy   = "redirect-to-https"
-    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managed-allviewer.id
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.cloud1.id
     cache_policy_id = aws_cloudfront_cache_policy.static.id
   }
 
@@ -74,10 +73,7 @@ resource "aws_cloudfront_origin_request_policy" "cloud1" {
     cookie_behavior = "all"
   }
   headers_config {
-    header_behavior = "whitelist"
-    headers {
-      items = ["Host"]
-    }
+    header_behavior = "allViewer"
   }
   query_strings_config {
     query_string_behavior = "all"

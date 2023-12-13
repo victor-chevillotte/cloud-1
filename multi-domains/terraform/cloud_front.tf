@@ -16,7 +16,6 @@ resource "aws_cloudfront_distribution" "cloud1" {
     }
   }
 
-
   enabled         = true
 
   default_cache_behavior {
