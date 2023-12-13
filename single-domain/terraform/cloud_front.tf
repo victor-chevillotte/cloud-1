@@ -34,7 +34,7 @@ resource "aws_cloudfront_distribution" "cloud1" {
     path_pattern             = "/wp-content/*"
     target_origin_id         = aws_lb.alb_wordpress.id
     allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods           = ["GET", "HEAD", "OPTIONS"]
+    cached_methods           = ["GET", "HEAD"]
     viewer_protocol_policy   = "redirect-to-https"
     origin_request_policy_id = aws_cloudfront_origin_request_policy.cloud1.id
     cache_policy_id          = aws_cloudfront_cache_policy.static.id
@@ -73,7 +73,10 @@ resource "aws_cloudfront_origin_request_policy" "cloud1" {
     cookie_behavior = "all"
   }
   headers_config {
-    header_behavior = "allViewer"
+    header_behavior = "whitelist"
+    headers {
+      items = ["Host"]
+    }
   }
   query_strings_config {
     query_string_behavior = "all"
@@ -89,9 +92,9 @@ data "aws_cloudfront_origin_request_policy" "managed-allviewer" {
 resource "aws_cloudfront_cache_policy" "cloud1" {
   name = "cloud1"
 
-  default_ttl = 1
-  max_ttl     = 10
-  min_ttl     = 0
+  default_ttl = 10
+  max_ttl     = 20
+  min_ttl     = 1
 
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
@@ -114,7 +117,7 @@ resource "aws_cloudfront_cache_policy" "cloud1" {
 resource "aws_cloudfront_cache_policy" "static" {
   name = "${var.prefix}-static-cache-policy"
 
-  default_ttl = 60
+  default_ttl = 120
   max_ttl     = 120
   min_ttl     = 30
   parameters_in_cache_key_and_forwarded_to_origin {
@@ -125,7 +128,7 @@ resource "aws_cloudfront_cache_policy" "static" {
     headers_config {
       header_behavior = "whitelist"
       headers {
-        items = ["Host", "Origin"]
+        items = ["Host"]
       }
     }
 

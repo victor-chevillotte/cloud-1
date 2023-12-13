@@ -9,6 +9,14 @@ data "aws_subnets" "default" {
   }
 }
 
+resource "aws_lb" "alb_wordpress" {
+  name               = "${var.prefix}-${var.alb_name}"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets            = data.aws_subnets.default.ids
+}
+
 resource "aws_lb_target_group" "tg_wordpress" {
   name     = "${var.prefix}-${var.target_group_name}-${substr(uuid(), 0, 3)}"
   port     = 8080 #port of wordpress
@@ -95,25 +103,6 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-
-resource "aws_lb" "alb_wordpress" {
-  name               = "${var.prefix}-${var.alb_name}"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = data.aws_subnets.default.ids
-}
-
-resource "aws_autoscaling_attachment" "wordpress_attachment" {
-  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
-  lb_target_group_arn    = aws_lb_target_group.tg_wordpress.arn
-}
-
-resource "aws_autoscaling_attachment" "phpmyadmin_attachment" {
-  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
-  lb_target_group_arn    = aws_lb_target_group.tg_phpmyadmin.arn
-}
-
 resource "aws_lb_listener" "redirect_https" {
   load_balancer_arn = aws_lb.alb_wordpress.arn
   port              = "80"
@@ -128,6 +117,17 @@ resource "aws_lb_listener" "redirect_https" {
     }
   }
 }
+
+resource "aws_autoscaling_attachment" "wordpress_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
+  lb_target_group_arn    = aws_lb_target_group.tg_wordpress.arn
+}
+
+resource "aws_autoscaling_attachment" "phpmyadmin_attachment" {
+  autoscaling_group_name = aws_autoscaling_group.wordpress_asg.id
+  lb_target_group_arn    = aws_lb_target_group.tg_phpmyadmin.arn
+}
+
 
 resource "aws_lb_listener_rule" "phpmyadmin" {
   listener_arn = aws_lb_listener.https.arn
