@@ -14,12 +14,12 @@ resource "aws_cloudfront_distribution" "cloud1" {
   }
 
 
-  enabled         = true
+  enabled = true
 
   default_cache_behavior {
     cache_policy_id  = aws_cloudfront_cache_policy.cloud1.id
     target_origin_id = aws_lb.alb_wordpress.id
-    
+
 
     allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -31,13 +31,13 @@ resource "aws_cloudfront_distribution" "cloud1" {
 
   # Cache behavior with precedence 0
   ordered_cache_behavior {
-    path_pattern     = "/wp-content/*"
-    target_origin_id = aws_lb.alb_wordpress.id
-    allowed_methods = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
-    cached_methods  = ["GET", "HEAD", "OPTIONS"]
+    path_pattern             = "/wp-content/*"
+    target_origin_id         = aws_lb.alb_wordpress.id
+    allowed_methods          = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods           = ["GET", "HEAD", "OPTIONS"]
     viewer_protocol_policy   = "redirect-to-https"
     origin_request_policy_id = aws_cloudfront_origin_request_policy.cloud1.id
-    cache_policy_id = aws_cloudfront_cache_policy.static.id
+    cache_policy_id          = aws_cloudfront_cache_policy.static.id
   }
 
   restrictions {

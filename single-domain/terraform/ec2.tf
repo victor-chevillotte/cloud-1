@@ -40,7 +40,7 @@ data "cloudinit_config" "config" {
 
   part {
     content_type = "text/x-shellscript"
-    content      = templatefile("${path.module}/config/userdata.sh", {
+    content = templatefile("${path.module}/config/userdata.sh", {
       EFS_DNS = aws_efs_file_system.wordpress_efs.dns_name
     })
   }
@@ -77,34 +77,34 @@ resource "aws_security_group" "dev-ec2" {
   description = "rules for ${var.prefix}-ec2"
 
   ingress {
-    description      = "SSH Access"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    description = "SSH Access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    description      = "Worpress"
-    from_port        = 8080
-    to_port          = 8080
-    protocol         = "tcp"
-    security_groups      = [aws_security_group.alb_sg.id]
+    description     = "Worpress"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
   }
 
   ingress {
-    description      = "PHPMyAdmin"
-    from_port        = 8081
-    to_port          = 8081
-    protocol         = "tcp"
-    security_groups      = [aws_security_group.alb_sg.id]
+    description     = "PHPMyAdmin"
+    from_port       = 8081
+    to_port         = 8081
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 

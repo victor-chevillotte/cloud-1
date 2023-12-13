@@ -19,18 +19,18 @@ resource "aws_security_group" "efs" {
   description = "rules for ${var.prefix}-efs"
 
   ingress {
-    description = "EFS mount target"
-    from_port   = 2049
-    to_port     = 2049
-    protocol    = "tcp"
+    description     = "EFS mount target"
+    from_port       = 2049
+    to_port         = 2049
+    protocol        = "tcp"
     security_groups = [aws_security_group.dev-ec2.id]
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
