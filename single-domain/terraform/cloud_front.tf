@@ -25,7 +25,7 @@ resource "aws_cloudfront_distribution" "cloud1" {
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
     viewer_protocol_policy   = "redirect-to-https"
-    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managed-allviewer.id
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.cloud1.id
 
   }
 
@@ -87,18 +87,22 @@ data "aws_cloudfront_origin_request_policy" "managed-allviewer" {
 
 
 resource "aws_cloudfront_cache_policy" "cloud1" {
-  name = "${var.prefix}-dynamic-cache-policy"
+  name = "cloud1"
 
-  default_ttl = 0
-  max_ttl     = 0
+  default_ttl = 1
+  max_ttl     = 10
   min_ttl     = 0
+
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
-      cookie_behavior = "none"
+      cookie_behavior = "all"
     }
 
     headers_config {
-      header_behavior = "none"
+      header_behavior = "whitelist"
+      headers {
+        items = ["Host"]
+      }
     }
 
     query_strings_config {
