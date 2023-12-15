@@ -8,6 +8,7 @@ _42 School Cloud Project_
 
 **Infrastructure as Code :** Terraform  
 
+**EC2 AMI tag are not hard-coded, we use terraform `data_source` to retrieve AMIs in selected AWS regions so filters may need an update to follow AWS AMI changes**    
 
 ### Two Architectures
 
