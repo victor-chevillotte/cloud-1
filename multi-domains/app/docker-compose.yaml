@@ -43,9 +43,7 @@ services:
         container_name: wpcli
         working_dir: /var/www/html
         image: wordpress:cli-2.9
-        depends_on:
-            wordpress:
-                condition: service_healthy
+        restart: on-failure
         environment:
             WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
             WORDPRESS_DB_HOST: ${DB_HOST}

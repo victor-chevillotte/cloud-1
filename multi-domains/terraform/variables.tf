@@ -36,6 +36,11 @@ variable "alb_name" {
 variable "instance_count" {
   type = number
   description = "Number of instances to create (Max 5)"
+
+  validation {
+    condition     = var.instance_count > 0 && var.instance_count <= 5
+    error_message = "Number of instances must be at leat 1 and less than 6"
+  }
 }
 
 variable "db_name" {
