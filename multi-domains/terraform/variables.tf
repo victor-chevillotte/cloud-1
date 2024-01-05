@@ -34,7 +34,7 @@ variable "alb_name" {
 }
 
 variable "instance_count" {
-  type = number
+  type        = number
   description = "Number of instances to create (Max 5)"
 
   validation {

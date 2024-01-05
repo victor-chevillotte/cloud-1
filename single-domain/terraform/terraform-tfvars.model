@@ -4,4 +4,4 @@ phpmyadmin_sub_domain_name =
 db_name          = 
 db_username      = 
 db_password      = 
-instance_count   = 
+asg_desired_capacity   = 

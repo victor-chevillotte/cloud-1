@@ -1,5 +1,5 @@
 resource "aws_db_instance" "cloud1" {
-  count = var.instance_count
+  count             = var.instance_count
   allocated_storage = 20
   engine            = "mariadb"
   storage_type      = "gp2"

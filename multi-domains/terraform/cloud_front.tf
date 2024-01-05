@@ -16,7 +16,7 @@ resource "aws_cloudfront_distribution" "cloud1" {
     }
   }
 
-  enabled         = true
+  enabled = true
 
   default_cache_behavior {
     cache_policy_id  = aws_cloudfront_cache_policy.cloud1.id

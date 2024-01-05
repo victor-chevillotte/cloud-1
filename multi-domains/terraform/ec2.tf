@@ -27,13 +27,13 @@ data "cloudinit_config" "config" {
           permissions = "0644"
           owner       = "root:root"
           content = templatefile("${path.module}/../app/.env", {
-            WORDPRESS_SUBDOMAIN = var.wordpress_sub_domain_list[count.index]
-            WORDPRESS_TITLE = var.wordpress_sub_domain_list[count.index]
-            RDS_HOST      = aws_db_instance.cloud1[count.index].address
-            DOMAIN_NAME   = var.domain_name
-            RDS_USER      = var.db_username
-            RDS_PASSWORD  = var.db_password
-            RDS_DB_NAME   = var.db_name
+            WORDPRESS_SUBDOMAIN  = var.wordpress_sub_domain_list[count.index]
+            WORDPRESS_TITLE      = var.wordpress_sub_domain_list[count.index]
+            RDS_HOST             = aws_db_instance.cloud1[count.index].address
+            DOMAIN_NAME          = var.domain_name
+            RDS_USER             = var.db_username
+            RDS_PASSWORD         = var.db_password
+            RDS_DB_NAME          = var.db_name
             PHPMYADMIN_SUBDOMAIN = var.phpmyadmin_sub_domain_list[count.index]
           })
         }
@@ -57,7 +57,7 @@ data "aws_ami" "linux" {
   }
 
   filter {
-    name = "architecture"
+    name   = "architecture"
     values = ["x86_64"]
   }
 }
@@ -96,34 +96,34 @@ resource "aws_security_group" "dev-ec2" {
   description = "rules for wordpress-ec2"
 
   ingress {
-    description      = "SSH Access"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    description = "SSH Access"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    description      = "Worpress"
-    from_port        = 8080
-    to_port          = 8080
-    protocol         = "tcp"
-    security_groups      = [aws_security_group.alb_sg.id]
+    description     = "Worpress"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
   }
 
   ingress {
-    description      = "PHPMyAdmin"
-    from_port        = 8081
-    to_port          = 8081
-    protocol         = "tcp"
-    security_groups      = [aws_security_group.alb_sg.id]
+    description     = "PHPMyAdmin"
+    from_port       = 8081
+    to_port         = 8081
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 

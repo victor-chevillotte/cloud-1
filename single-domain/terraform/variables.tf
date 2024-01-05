@@ -33,10 +33,6 @@ variable "alb_name" {
   type    = string
 }
 
-variable "instance_count" {
-  type = number
-}
-
 variable "db_name" {
   type = string
 }
@@ -70,14 +66,19 @@ variable "phpmyadmin_sub_domain_name" {
 variable "asg_desired_capacity" {
   description = "The number of Amazon EC2 instances that should be running in the group. (Changing this forces a new resource to be created.)"
   default     = 2
+
+  validation {
+    condition     = var.asg_desired_capacity > 0 && var.asg_desired_capacity <= 5
+    error_message = "Number of instances must be at leat 1 and less than 6"
+  }
 }
 
 variable "asg_max_size" {
   description = "The maximum size of the auto scale group. (Changing this forces a new resource to be created.)"
-  default     = 4
+  default     = 5
 }
 
 variable "asg_min_size" {
   description = "The minimum size of the auto scale group. (Changing this forces a new resource to be created.)"
-  default     = 2
+  default     = 1
 }
