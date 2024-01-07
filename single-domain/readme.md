@@ -31,7 +31,7 @@ The EC2 instances must share a folder to save wordpress assets like images
 - AWS Virtual Machine running on Amazon Linux 2023  
 - Wordpress runs on docker and connects to the database on port 3306
 - The website is fully configured by running a wordpress-cli container 
-- A service `wordpress.service` is created and enabled to ensure the docker compose stack is run after an instance reboot 
+- A service `wordpress.service` is created and enabled to ensure the docker compose stack is run after an instance reboot  
 The service can be checked with `sudo systemctl status wordpress.service` or restarted with `sudo systemctl restart wordpress.service`  
 
 
